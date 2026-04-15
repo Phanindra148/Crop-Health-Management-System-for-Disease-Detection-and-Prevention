@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CropDoc - Diagnosis &amp; Treatment</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#88d982",
+                        "outline": "#707a6c",
+                        "secondary-fixed": "#ffdbce",
+                        "surface-tint": "#1b6d24",
+                        "on-secondary-fixed": "#2b160f",
+                        "on-primary": "#ffffff",
+                        "secondary": "#75584d",
+                        "primary-fixed": "#a3f69c",
+                        "surface-container-low": "#f1f5e7",
+                        "tertiary": "#754d00",
+                        "surface-bright": "#f6fbed",
+                        "tertiary-container": "#966300",
+                        "on-background": "#181d15",
+                        "on-secondary-fixed-variant": "#5b4137",
+                        "primary": "#0d631b",
+                        "inverse-on-surface": "#eef3e5",
+                        "error-container": "#ffdad6",
+                        "surface": "#f6fbed",
+                        "surface-container-highest": "#dfe4d7",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e5eadc",
+                        "outline-variant": "#bfcaba",
+                        "on-surface": "#181d15",
+                        "on-tertiary-container": "#ffeedc",
+                        "background": "#f6fbed",
+                        "tertiary-fixed": "#ffddb2",
+                        "surface-container": "#ebf0e2",
+                        "on-primary-container": "#cbffc2",
+                        "on-primary-fixed-variant": "#005312",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#dfe4d7",
+                        "secondary-fixed-dim": "#e4beb2",
+                        "on-primary-fixed": "#002204",
+                        "surface-dim": "#d7dcce",
+                        "tertiary-fixed-dim": "#fdba55",
+                        "on-tertiary-fixed-variant": "#624000",
+                        "inverse-surface": "#2d3229",
+                        "secondary-container": "#fed7ca",
+                        "on-tertiary-fixed": "#291800",
+                        "on-surface-variant": "#40493d",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#795c51",
+                        "primary-container": "#2e7d32",
+                        "primary-fixed-dim": "#88d982"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<header class="bg-[#f6fbed]/70 dark:bg-[#181d15]/70 backdrop-blur-xl docked full-width top-0 sticky z-50 flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#0d631b] dark:text-[#2e7d32]" data-icon="eco">eco</span>
+<span class="font-manrope font-extrabold tracking-tight text-[#0d631b] dark:text-[#2e7d32] text-lg">CropDoc</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#181d15] dark:text-[#dfe4d7] hover:opacity-80 transition-opacity active:scale-95 duration-200" data-icon="share">share</button>
+<button class="material-symbols-outlined text-[#181d15] dark:text-[#dfe4d7] hover:opacity-80 transition-opacity active:scale-95 duration-200" data-icon="bookmark">bookmark</button>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 pt-4 space-y-8">
+<section class="relative group">
+<div class="aspect-[16/10] overflow-hidden rounded-xl bg-surface-container-low shadow-sm">
+<img alt="scanned leaf" class="w-full h-full object-cover" data-alt="Close-up of a vibrant green tomato leaf showing brown necrotic spots and white fuzzy mold indicative of late blight disease" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrvq7Nhz4tvBX3DYQ2whpSv6IrMaS8SVLQT9A3_EkJ_WGyo8ppdjkV4mlGrmNWA5iBdHhhJd89UWxQGBbAM4lXa5ZAqWT_XERODch-XPNFXXgJSw7EfWG1VCfhfByr0ywurUijCUFQHmMaRI91EXVQtDPi2Bnswr7my6WQvrJNnbZ-APer9siOB1ESVISWKiMVTB_XkSJTkgS9DKnuKW7fO7CPJG6O00p1AkDjv89oenyZ2EiQYRE8D8AU90bmDTsFerEGBsDiXQ9E"/>
+</div>
+<div class="absolute bottom-4 left-4 bg-surface-container-lowest/90 backdrop-blur px-4 py-2 rounded-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span>
+<span class="text-label text-[11px] font-medium tracking-[0.05em] uppercase">Scan Verified</span>
+</div>
+</section>
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="md:col-span-2 space-y-4">
+<div class="space-y-1">
+<p class="text-label text-[11px] font-medium tracking-[0.05em] uppercase text-on-surface-variant">Detected Condition</p>
+<h1 class="text-4xl font-extrabold text-on-surface leading-tight tracking-tight">Tomato Late Blight</h1>
+</div>
+<div class="flex flex-wrap gap-3">
+<div class="bg-primary-container text-on-primary-container px-4 py-2 rounded-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="analytics">analytics</span>
+<span class="font-bold">96.7% Deep Learning Confidence</span>
+</div>
+<div class="bg-tertiary-container text-on-tertiary-container px-4 py-2 rounded-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="warning">warning</span>
+<span class="font-bold">High Risk</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-high p-6 rounded-xl space-y-4">
+<h3 class="font-bold text-lg">Risk Assessment</h3>
+<div class="w-full bg-outline-variant/30 h-3 rounded-full overflow-hidden">
+<div class="bg-error h-full w-[85%] rounded-full"></div>
+</div>
+<p class="text-sm text-on-surface-variant">The infection is in an advanced stage. Immediate intervention is required to save the crop and prevent spreading.</p>
+</div>
+</section>
+<section class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+<div class="lg:col-span-3 bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="healing">healing</span>
+<h2 class="text-2xl font-bold">How to Cure</h2>
+</div>
+<div class="space-y-8 relative">
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm shrink-0">1</div>
+<div class="w-0.5 h-full bg-surface-container-highest mt-2"></div>
+</div>
+<div class="pb-4">
+<h4 class="font-bold text-lg mb-1">Isolate Infected Plants</h4>
+<p class="text-on-surface-variant leading-relaxed">Remove and safely destroy all infected foliage. Do not compost these remains as spores can survive.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm shrink-0">2</div>
+<div class="w-0.5 h-full bg-surface-container-highest mt-2"></div>
+</div>
+<div class="pb-4">
+<h4 class="font-bold text-lg mb-1">Apply Fungicide</h4>
+<p class="text-on-surface-variant leading-relaxed">Use a copper-based fungicide or products containing chlorothalonil. Apply thoroughly to both sides of the leaves.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm shrink-0">3</div>
+</div>
+<div>
+<h4 class="font-bold text-lg mb-1">Prune for Airflow</h4>
+<p class="text-on-surface-variant leading-relaxed">Thin out the lower branches to increase air circulation and reduce humidity around the plant base.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-2 space-y-6">
+<div class="bg-surface-container-low p-8 rounded-xl space-y-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="shield">shield</span>
+<h2 class="text-2xl font-bold">Precautions</h2>
+</div>
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5" data-icon="check_circle">check_circle</span>
+<span class="text-on-surface-variant">Avoid overhead watering; water only the base of the plant.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5" data-icon="check_circle">check_circle</span>
+<span class="text-on-surface-variant">Maintain at least 24 inches of space between plants.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5" data-icon="check_circle">check_circle</span>
+<span class="text-on-surface-variant">Rotate crops annually; do not plant tomatoes where potatoes grew.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5" data-icon="check_circle">check_circle</span>
+<span class="text-on-surface-variant">Sanitize gardening tools with 70% alcohol after each use.</span>
+</li>
+</ul>
+</div>
+<div class="bg-secondary-container p-6 rounded-xl flex items-center justify-between group cursor-pointer hover:opacity-90 transition-opacity">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-on-secondary-container/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container" data-icon="medication">medication</span>
+</div>
+<div>
+<h4 class="font-bold text-on-secondary-container">Buy Treatment Kit</h4>
+<p class="text-sm text-on-secondary-container/70">Bio-Organic Fungicide Pack</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-secondary-container group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</section>
+</main>
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-[#f6fbed]/70 dark:bg-[#181d15]/70 backdrop-blur-xl z-50 rounded-t-[1.5rem] shadow-[0_-4px_32px_rgba(24,29,21,0.06)]">
+<a class="flex flex-col items-center justify-center text-[#181d15]/60 dark:text-[#dfe4d7]/60 px-5 py-2 hover:bg-[#f1f5e7] dark:hover:bg-[#181d15] transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home_max">home_max</span>
+<span class="font-inter text-[11px] font-medium tracking-[0.05em] uppercase mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#ffffff] dark:bg-[#2e7d32]/20 text-[#0d631b] dark:text-[#ffffff] rounded-[1.5rem] px-5 py-2 hover:bg-[#f1f5e7] dark:hover:bg-[#181d15] transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-inter text-[11px] font-medium tracking-[0.05em] uppercase mt-1">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#181d15]/60 dark:text-[#dfe4d7]/60 px-5 py-2 hover:bg-[#f1f5e7] dark:hover:bg-[#181d15] transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-inter text-[11px] font-medium tracking-[0.05em] uppercase mt-1">Profile</span>
+</a>
+</nav>
+<script>
+    // Get parameters from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const disease = urlParams.get('disease');
+    const confidence = urlParams.get('confidence');
+    const source = urlParams.get('source');
+
+    if (disease) {
+        // Update the diagnosis based on the disease parameter
+        const diagnosisTitle = document.querySelector('h1');
+        const riskAssessment = document.querySelector('.bg-surface-container-high p');
+        const riskBar = document.querySelector('.bg-error');
+        const confidenceElement = document.querySelector('.bg-primary-container span:last-child');
+
+        // Update confidence display
+        if (confidence && confidenceElement) {
+            confidenceElement.textContent = `${confidence}% Deep Learning Confidence`;
+        }
+
+        // Disease mapping and risk assessment
+        const diseaseConfig = {
+            'late_blight': {
+                title: 'Tomato Late Blight',
+                risk: 85,
+                assessment: `Our deep learning model detected characteristic late blight patterns with ${confidence}% confidence. Immediate intervention required.`
+            },
+            'powdery_mildew': {
+                title: 'Powdery Mildew',
+                risk: 60,
+                assessment: `Deep learning analysis identified powdery mildew with ${confidence}% confidence. Early treatment recommended.`
+            },
+            'septoria_leaf_spot': {
+                title: 'Septoria Leaf Spot',
+                risk: 50,
+                assessment: `CNN model classified this as septoria leaf spot with ${confidence}% confidence. Monitor and treat as needed.`
+            },
+            'healthy': {
+                title: 'Healthy Plant',
+                risk: 0,
+                assessment: `Deep learning analysis shows no disease patterns detected (${confidence}% confidence). Plant appears healthy.`
+            },
+            'bacterial_spot': {
+                title: 'Bacterial Spot',
+                risk: 70,
+                assessment: `Model identified bacterial spot disease with ${confidence}% confidence.`
+            },
+            'early_blight': {
+                title: 'Early Blight',
+                risk: 65,
+                assessment: `Deep learning detected early blight patterns with ${confidence}% confidence.`
+            },
+            'leaf_mold': {
+                title: 'Leaf Mold',
+                risk: 55,
+                assessment: `CNN analysis identified leaf mold with ${confidence}% confidence.`
+            },
+            'spider_mites': {
+                title: 'Spider Mites',
+                risk: 45,
+                assessment: `Model detected spider mite damage with ${confidence}% confidence.`
+            },
+            'target_spot': {
+                title: 'Target Spot',
+                risk: 60,
+                assessment: `Deep learning identified target spot with ${confidence}% confidence.`
+            },
+            'tomato_yellow_leaf_curl_virus': {
+                title: 'Tomato Yellow Leaf Curl Virus',
+                risk: 90,
+                assessment: `Model detected TYLCV symptoms with ${confidence}% confidence. High risk of spread.`
+            },
+            'tomato_mosaic_virus': {
+                title: 'Tomato Mosaic Virus',
+                risk: 80,
+                assessment: `Deep learning identified TMV with ${confidence}% confidence.`
+            },
+            'rust': {
+                title: 'Leaf Rust',
+                risk: 70,
+                assessment: `CNN model detected rust spores with ${confidence}% confidence.`
+            },
+            'rot': {
+                title: 'Root Rot',
+                risk: 90,
+                assessment: `Deep learning analysis identified root rot with ${confidence}% confidence.`
+            },
+            'wilt': {
+                title: 'Fusarium Wilt',
+                risk: 75,
+                assessment: `Model detected vascular wilt with ${confidence}% confidence.`
+            }
+        };
+
+        const config = diseaseConfig[disease] || diseaseConfig['late_blight'];
+
+        diagnosisTitle.textContent = config.title;
+        riskAssessment.textContent = config.assessment;
+        riskBar.style.width = config.risk + '%';
+
+        // Change risk bar color for healthy plants
+        if (config.risk === 0) {
+            riskBar.style.backgroundColor = '#0d631b';
+        }
+    }
+</script>
+</body></html>

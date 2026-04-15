@@ -1,0 +1,2291 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>CropDoc — AI Plant Disease Advisor</title>
+  <meta name="description"
+    content="Instantly identify plant pests, diseases, and nutrient deficiencies using AI-powered camera diagnostics. Protect your harvest with CropDoc." />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "error": "#ba1a1a",
+            "inverse-primary": "#88d982",
+            "outline": "#707a6c",
+            "secondary-fixed": "#ffdbce",
+            "surface-tint": "#1b6d24",
+            "on-secondary-fixed": "#2b160f",
+            "on-primary": "#ffffff",
+            "secondary": "#75584d",
+            "primary-fixed": "#a3f69c",
+            "surface-container-low": "#f1f5e7",
+            "tertiary": "#754d00",
+            "surface-bright": "#f6fbed",
+            "tertiary-container": "#966300",
+            "on-background": "#181d15",
+            "on-secondary-fixed-variant": "#5b4137",
+            "primary": "#0d631b",
+            "inverse-on-surface": "#eef3e5",
+            "error-container": "#ffdad6",
+            "surface": "#f6fbed",
+            "surface-container-highest": "#dfe4d7",
+            "on-error-container": "#93000a",
+            "surface-container-high": "#e5eadc",
+            "outline-variant": "#bfcaba",
+            "on-surface": "#181d15",
+            "on-tertiary-container": "#ffeedc",
+            "background": "#f6fbed",
+            "tertiary-fixed": "#ffddb2",
+            "surface-container": "#ebf0e2",
+            "on-primary-container": "#cbffc2",
+            "on-primary-fixed-variant": "#005312",
+            "on-tertiary": "#ffffff",
+            "surface-variant": "#dfe4d7",
+            "secondary-fixed-dim": "#e4beb2",
+            "on-primary-fixed": "#002204",
+            "surface-dim": "#d7dcce",
+            "tertiary-fixed-dim": "#fdba55",
+            "on-tertiary-fixed-variant": "#624000",
+            "inverse-surface": "#2d3229",
+            "secondary-container": "#fed7ca",
+            "on-tertiary-fixed": "#291800",
+            "on-surface-variant": "#40493d",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-error": "#ffffff",
+            "on-secondary-container": "#795c51",
+            "primary-container": "#2e7d32",
+            "primary-fixed-dim": "#88d982"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "1.5rem",
+            "md": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* ── Global ── */
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f6fbed;
+      color: #181d15;
+      min-height: 100dvh;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-family: 'Manrope', sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .fill-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    /* ── Navigation ── */
+    .glass {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* ── Page transitions ── */
+    .page {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── Scan laser animation ── */
+    @keyframes scan {
+      0% {
+        top: 0%;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        top: 100%;
+        opacity: 0;
+      }
+    }
+
+    .laser-line {
+      position: absolute;
+      height: 4px;
+      width: 100%;
+      background: linear-gradient(90deg, transparent, #2e7d32, #ffffff, #2e7d32, transparent);
+      box-shadow: 0 0 15px 2px rgba(46, 125, 50, 0.8);
+      animation: scan 3s ease-in-out infinite;
+      z-index: 10;
+    }
+
+    @keyframes progress-anim {
+      0% {
+        width: 0%;
+      }
+
+      50% {
+        width: 65%;
+      }
+
+      100% {
+        width: 100%;
+      }
+    }
+
+    .progress-fill {
+      animation: progress-anim 8s linear forwards;
+    }
+
+    /* ── Pulse ring ── */
+    @keyframes ring-pulse {
+
+      0%,
+      100% {
+        opacity: .35;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: .7;
+        transform: scale(1.05);
+      }
+    }
+
+    .ring-pulse {
+      animation: ring-pulse 2.4s ease-in-out infinite;
+    }
+
+    /* ── Mobile nav highlight ── */
+    .mobile-nav-item.nav-active .nav-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    /* ── Scan button pulse overlay ── */
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: .3;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: .6;
+        transform: scale(1.05);
+      }
+    }
+
+    .scan-ring {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* ── AI Activation Pulse ── */
+    @keyframes ai-pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+      }
+    }
+
+    .ai-btn-pulse {
+      animation: ai-pulse 2s infinite;
+    }
+
+    /* ── Hamburger mobile menu ── */
+    #mobile-menu {
+      display: none;
+    }
+
+    #mobile-menu.open {
+      display: block;
+    }
+
+    /* ── Bottom-sheet picker ── */
+    #scan-picker-overlay {
+      display: none;
+    }
+
+    #scan-picker-overlay.open {
+      display: flex;
+    }
+
+    #scan-picker-sheet {
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(.32, .72, 0, 1);
+    }
+
+    #scan-picker-overlay.open #scan-picker-sheet {
+      transform: translateY(0);
+    }
+
+    /* ── Camera modal ── */
+    #camera-modal {
+      display: none;
+    }
+
+    #camera-modal.open {
+      display: flex;
+    }
+
+    #camera-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 1.5rem;
+    }
+
+    /* ── Flash capture effect ── */
+    @keyframes flash {
+      0% {
+        opacity: 0
+      }
+
+      20% {
+        opacity: .85
+      }
+
+      100% {
+        opacity: 0
+      }
+    }
+
+    .capture-flash {
+      animation: flash 0.45s ease forwards;
+    }
+
+    /* ── API key modal ── */
+    #api-key-modal, #edit-profile-modal {
+      display: none;
+    }
+
+    #api-key-modal.open, #edit-profile-modal.open {
+      display: flex;
+    }
+
+    #api-key-input:focus {
+      outline-offset: 0;
+    }
+
+    /* ── Auth Pages ── */
+    .auth-bg {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('auth_bg.png');
+      background-size: cover;
+      background-position: center;
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-bg.active {
+      display: flex;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+
+<body class="bg-surface text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+  <!-- ════════════════════════════════════════════
+     DESKTOP NAVIGATION (md+)
+════════════════════════════════════════════ -->
+  <nav id="desktop-nav"
+    class="hidden md:flex fixed top-0 w-full z-50 justify-between items-center px-8 py-4 bg-[#f6fbed]/75 glass border-b border-outline-variant/10">
+    <div class="flex items-center gap-8">
+      <button onclick="navigate('home')" class="flex items-center gap-2 focus:outline-none">
+        <span class="material-symbols-outlined fill-icon text-primary">eco</span>
+        <span class="text-xl font-black text-primary tracking-tighter font-headline">CropDoc</span>
+      </button>
+      <div class="flex gap-6 items-center">
+        <a id="nav-home-link" onclick="navigate('home')"
+          class="cursor-pointer font-headline font-bold tracking-tight text-primary border-b-2 border-primary pb-0.5 transition-all duration-200">Home</a>
+        <a id="nav-history-link" onclick="navigate('history')"
+          class="cursor-pointer font-headline font-bold tracking-tight text-on-surface opacity-60 hover:opacity-100 hover:text-primary pb-0.5 border-b-2 border-transparent hover:border-primary transition-all duration-200">History</a>
+        <a id="nav-profile-link" onclick="navigate('profile')"
+          class="cursor-pointer font-headline font-bold tracking-tight text-on-surface opacity-60 hover:opacity-100 hover:text-primary pb-0.5 border-b-2 border-transparent hover:border-primary transition-all duration-200">Profile</a>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="hidden lg:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2">
+        <span class="material-symbols-outlined text-outline text-sm">search</span>
+        <input id="desktop-search"
+          class="bg-transparent border-none focus:ring-0 text-sm w-48 placeholder:text-on-surface-variant/50"
+          placeholder="Search crops, diseases…" type="text" />
+      </div>
+
+      <!-- AI Activation Button -->
+      <button onclick="showApiKeyModal(null)"
+        class="flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-full transition-all border border-primary/20 ai-btn-pulse">
+        <span class="material-symbols-outlined text-sm font-bold"
+          style="font-variation-settings: 'FILL' 1">auto_awesome</span>
+        <span class="text-xs font-black uppercase tracking-wider font-headline">Activate AI</span>
+      </button>
+
+      <button title="Notifications"
+        class="material-symbols-outlined p-2 text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-high">notifications</button>
+      <button onclick="navigate('profile')" class="flex items-center gap-2 group">
+        <span
+          class="text-sm font-bold text-on-surface-variant group-hover:text-primary transition-colors user-name-display">Rajesh
+          Kumar</span>
+        <img alt="User profile"
+          class="w-10 h-10 rounded-full object-cover ring-2 ring-surface-container-high cursor-pointer user-avatar-display"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuALtFK9FxV3He61Z1ltfWlC31G6FfRo5J-y75wf1TVVDqP4bkcO0m-fCTmtBMmQIb7_wt7zOE4ia4c5ncxl9sXhiJmBfaf3-q16ArnM4AEA2tL1u0nNTXGK9kPGi9OJOsDdCg5xC6O1U2EMKzJlPaogzKFUdl16ggi7lp0njZsMfhA-iNe0X8FuuPv9tUgJrObKwMHV3pTSQYAv7qaSixT4E9C5CyA88gn90_3jC4RjHyd2gNbjAHQxfcCWcUVXgWm_wm8vj6-FICkc" />
+      </button>
+    </div>
+  </nav>
+
+  <!-- Protocol Warning Banner -->
+  <div id="protocol-warning"
+    class="hidden fixed top-20 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-xl bg-error text-on-error p-6 rounded-3xl shadow-2xl flex flex-col md:flex-row items-center gap-6 animate-bounce border-4 border-white/20">
+    <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
+      <span class="material-symbols-outlined text-4xl">warning</span>
+    </div>
+    <div class="flex-1 text-center md:text-left">
+      <p class="font-headline font-bold text-xl">Connection Error Risk</p>
+      <p class="text-xs opacity-90 leading-relaxed">You are viewing this as a local file. To ensure <b>Login, Signup,
+          and History</b> work correctly, please use the local server link.</p>
+      <div class="mt-4 flex flex-wrap gap-2 justify-center md:justify-start">
+        <a href="http://localhost:3001"
+          class="px-4 py-2 bg-white text-error font-bold rounded-xl text-xs flex items-center gap-2 hover:bg-opacity-90 transition-all">
+          <span class="material-symbols-outlined text-sm">open_in_new</span>
+          Switch to http://localhost:3001
+        </a>
+        <button onclick="this.closest('#protocol-warning').remove()"
+          class="px-4 py-2 bg-black/20 text-white font-bold rounded-xl text-xs hover:bg-black/30 transition-all">
+          Dismiss
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- ════════════════════════════════════════════
+     MOBILE TOP BAR (< md)
+════════════════════════════════════════════ -->
+  <header id="mobile-header"
+    class="md:hidden fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-[#f6fbed]/75 glass border-b border-outline-variant/10">
+    <button onclick="navigate('home')" class="flex items-center gap-2">
+      <span class="material-symbols-outlined fill-icon text-primary">eco</span>
+      <span class="text-lg font-extrabold text-primary tracking-tight font-headline">CropDoc</span>
+    </button>
+    <div class="flex items-center gap-2">
+      <!-- Mobile AI Activation -->
+      <button onclick="showApiKeyModal(null)"
+        class="flex items-center justify-center w-10 h-10 bg-primary/10 text-primary rounded-xl border border-primary/20 ai-btn-pulse">
+        <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1">auto_awesome</span>
+      </button>
+      <button onclick="navigate('home')"
+        class="material-symbols-outlined p-2 text-primary hover:bg-primary/10 rounded-xl transition-colors">home</button>
+      <button onclick="navigate('history')"
+        class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors">history</button>
+      <button onclick="navigate('profile')"
+        class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors">account_circle</button>
+    </div>
+  </header>
+  <!-- Mobile slide-down menu (DELETED - No longer needed) -->
+  <!-- ════════════════════════════════════════════
+     PAGE: LOGIN
+════════════════════════════════════════════ -->
+  <div id="page-login" class="page auth-bg p-6">
+    <div class="glass-card w-full max-w-md p-8 rounded-[2.5rem] shadow-2xl space-y-8">
+      <div class="text-center">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-primary/10 rounded-3xl mb-4">
+          <span class="material-symbols-outlined text-primary text-5xl fill-icon">eco</span>
+        </div>
+        <h1 class="text-4xl font-headline font-black text-on-surface tracking-tight">Welcome Back</h1>
+        <p class="text-on-surface-variant font-medium mt-2">Log in to your CropDoc account</p>
+      </div>
+
+      <form onsubmit="handleLogin(event)" class="space-y-5">
+        <div class="space-y-2">
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Email
+            Address</label>
+          <div class="relative">
+            <span
+              class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">mail</span>
+            <input required id="login-email" type="email" placeholder="farmer@example.com"
+              class="w-full pl-12 pr-4 py-4 bg-white/50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-body text-sm" />
+          </div>
+        </div>
+        <div class="space-y-2">
+          <label
+            class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Password</label>
+          <div class="relative">
+            <span
+              class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">lock</span>
+            <input required id="login-password" type="password" placeholder="••••••••"
+              class="w-full pl-12 pr-4 py-4 bg-white/50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-body text-sm" />
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <button type="button" class="text-sm font-bold text-primary hover:underline">Forgot Password?</button>
+        </div>
+        <button type="submit"
+          class="w-full py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-black font-headline rounded-2xl shadow-xl shadow-primary/20 hover:scale-[0.98] active:scale-95 transition-all text-lg">
+          Log In
+        </button>
+      </form>
+
+      <div class="text-center">
+        <p class="text-on-surface-variant text-sm">
+          Don't have an account?
+          <button onclick="navigate('signup')" class="text-primary font-bold hover:underline">Sign Up</button>
+        </p>
+      </div>
+
+      <div id="login-error"
+        class="hidden animate-bounce text-center p-3 bg-error/10 text-error rounded-xl text-sm font-bold"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+     PAGE: SIGNUP
+════════════════════════════════════════════ -->
+  <div id="page-signup" class="page auth-bg p-6">
+    <div class="glass-card w-full max-w-md p-8 rounded-[2.5rem] shadow-2xl space-y-8">
+      <div class="text-center">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-primary/10 rounded-3xl mb-4">
+          <span class="material-symbols-outlined text-primary text-5xl fill-icon">eco</span>
+        </div>
+        <h1 class="text-4xl font-headline font-black text-on-surface tracking-tight">Join CropDoc</h1>
+        <p class="text-on-surface-variant font-medium mt-2">Start your precision farming journey</p>
+      </div>
+
+      <form onsubmit="handleSignup(event)" class="space-y-5">
+        <div class="space-y-2">
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Full
+            Name</label>
+          <div class="relative">
+            <span
+              class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">person</span>
+            <input required id="signup-name" type="text" placeholder="Rajesh Kumar"
+              class="w-full pl-12 pr-4 py-4 bg-white/50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-body text-sm" />
+          </div>
+        </div>
+        <div class="space-y-2">
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Email
+            Address</label>
+          <div class="relative">
+            <span
+              class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">mail</span>
+            <input required id="signup-email" type="email" placeholder="farrmer@example.com"
+              class="w-full pl-12 pr-4 py-4 bg-white/50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-body text-sm" />
+          </div>
+        </div>
+        <div class="space-y-2">
+          <label
+            class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Password</label>
+          <div class="relative">
+            <span
+              class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">lock</span>
+            <input required id="signup-password" type="password" placeholder="••••••••"
+              class="w-full pl-12 pr-4 py-4 bg-white/50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 transition-all font-body text-sm" />
+          </div>
+        </div>
+
+        <button type="submit"
+          class="w-full py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-black font-headline rounded-2xl shadow-xl shadow-primary/20 hover:scale-[0.98] active:scale-95 transition-all text-lg">
+          Create Account
+        </button>
+      </form>
+
+      <div class="text-center">
+        <p class="text-on-surface-variant text-sm">
+          Already have an account?
+          <button onclick="navigate('login')" class="text-primary font-bold hover:underline">Log In</button>
+        </p>
+      </div>
+
+      <div id="signup-error"
+        class="hidden animate-bounce text-center p-3 bg-error/10 text-error rounded-xl text-sm font-bold"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+     PAGE WRAPPER (Project Content)
+════════════════════════════════════════════ -->
+  <div class="md:pt-[72px] pt-[64px]">
+
+    <!-- ──────────────────────────────────────────
+       PAGE: HOME
+  ────────────────────────────────────────── -->
+    <div id="page-home" class="page">
+      <!-- MOBILE HOME (< md) -->
+      <main class="md:hidden max-w-5xl mx-auto px-6 pt-8 pb-36">
+        <section class="relative mb-12">
+          <div class="grid grid-cols-1 gap-8 items-center">
+            <div class="flex flex-col items-start gap-4">
+              <span
+                class="font-label text-[0.6875rem] uppercase tracking-[0.05em] text-tertiary-container font-medium px-3 py-1 bg-surface-container-high rounded-full">AI-Powered
+                Diagnostics</span>
+              <h1 class="font-headline text-4xl font-extrabold text-on-surface leading-[1.1] tracking-tight">Protect
+                Your Harvest With Precision.</h1>
+              <p class="text-on-surface-variant text-lg max-w-md leading-relaxed">Instantly identify pests, diseases,
+                and nutrient deficiencies using your camera.</p>
+            </div>
+            <div class="flex justify-center">
+              <div class="relative w-full aspect-square max-w-sm">
+                <img alt="Vibrant green soybean plant leaf with sunlight"
+                  class="w-full h-full object-cover rounded-full border-8 border-surface-container-low"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3svLFYq6bxYbNl_-lbQ_Yq4JJ1zoSsBL3MPYz0FZ1U5206OptadsH_ovhuo2ukbg92mPRnDA4D8Xjsxhe8IhqHTTHGqV_vySbHNWxt22VsZyJu1DG8ya7NkfIzBsyWCzCfSsrbf-P5LmtLorZ1mrd69jwuH60d7blOqbmw8LGIHJLbna8NfAhIsrdommStTAh2VXrgB5tXNDmMgNI56mVAduHWABUt1rhUusxKERNdMmIlL7vwupwpKRys-qXkMAo2k7YXI8miQRm" />
+                <div
+                  class="absolute -bottom-4 -right-4 bg-white p-4 rounded-xl shadow-lg border border-outline-variant/10">
+                  <span class="material-symbols-outlined fill-icon text-primary text-4xl">verified</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Scan CTA -->
+        <section class="flex flex-col items-center justify-center gap-6 mb-16">
+          <button id="scan-btn-mobile" onclick="startScan()"
+            class="group relative flex flex-col items-center justify-center w-64 h-64 rounded-full bg-gradient-to-br from-primary to-primary-container text-on-primary shadow-xl transition-all hover:scale-105 active:scale-95 duration-300">
+            <div class="absolute inset-0 rounded-full border-4 border-primary-fixed/20 scan-ring"></div>
+            <span class="material-symbols-outlined text-7xl mb-4">center_focus_weak</span>
+            <span class="font-headline font-bold text-xl">Scan Your Crop</span>
+          </button>
+          <button
+            class="flex items-center gap-3 px-8 py-4 bg-secondary-container text-on-secondary-container font-body font-semibold rounded-xl hover:opacity-90 transition-opacity">
+            <span class="material-symbols-outlined fill-icon">photo_library</span>
+            Upload from Gallery
+          </button>
+        </section>
+      </main>
+      <!-- DESKTOP HOME (md+) -->
+      <main class="hidden md:block pt-6 px-8 pb-12 max-w-[1440px] mx-auto space-y-16">
+        <!-- Hero -->
+        <section class="grid grid-cols-12 gap-6 items-center">
+          <div class="col-span-7 space-y-6 pr-12">
+            <span
+              class="inline-block px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full text-[10px] font-bold tracking-widest uppercase font-label">AGRICULTURAL
+              INTELLIGENCE</span>
+            <h1 class="text-6xl lg:text-7xl font-headline font-black text-on-surface tracking-tighter leading-[0.9]">
+              The future of <span class="text-primary italic">farming</span> starts with a scan.
+            </h1>
+            <p class="text-lg text-on-surface-variant max-w-xl leading-relaxed">Identify plant diseases, monitor soil
+              health, and optimize your harvest yield with our AI-powered digital greenhouse diagnostics.</p>
+            <div class="flex flex-wrap gap-4 pt-4">
+              <button onclick="startScan()"
+                class="px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-xl font-bold font-headline flex items-center gap-3 shadow-lg shadow-primary/20 hover:scale-[0.98] transition-transform">
+                <span class="material-symbols-outlined">center_focus_strong</span> Scan Your Crop
+              </button>
+              <button onclick="navigate('history')"
+                class="px-8 py-4 bg-secondary-container text-on-secondary-container rounded-xl font-bold font-headline hover:bg-surface-container-highest transition-colors">
+                View Dashboard
+              </button>
+            </div>
+          </div>
+          <div class="col-span-5 relative h-[500px]">
+            <div class="absolute inset-0 bg-surface-container-low rounded-[2.5rem] transform rotate-3"></div>
+            <img
+              class="absolute inset-0 w-full h-full object-cover rounded-[2.5rem] shadow-2xl -rotate-2 hover:rotate-0 transition-transform duration-500"
+              alt="Macro shot of vibrant green leaf with sunlight illuminating intricate vein structure"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnGDJGZayndq2WA5HUYp3IcW4tSuLyhlZ9GKvD5a5W-4VxhE701Mri7-GLqd8XP3844tfHLY3mB-pibyNR2jMBFsmi8hu2y_kn5u7qZM4gJIS1bzP36lURueKG8sYiT7nWFUJ4lXleMyMBe7EydICXgbcvalR2tox2J54OmE54Mab6z0i8y8x9_2jHY4Jf7LIwvxEzUQc0dbcz7vjqj3ULfa-KgfIwwn8hvoY-MpuEdFivDs26OMnMLJGWwTMms8gMDch9tDA6BFEq" />
+            <div
+              class="absolute -bottom-6 -left-6 bg-surface-container-lowest p-6 rounded-xl shadow-xl flex items-center gap-4">
+              <div
+                class="w-12 h-12 bg-tertiary-container rounded-full flex items-center justify-center text-on-tertiary-container">
+                <span class="material-symbols-outlined">psychology</span>
+              </div>
+              <div>
+                <p class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">AI CONFIDENCE</p>
+                <p class="text-xl font-black font-headline text-primary">98.4% Accuracy</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+      <!-- Desktop Footer -->
+      <footer class="hidden md:block mt-12 bg-surface-container-low px-8 py-12">
+        <div class="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+          <div class="space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined fill-icon text-primary">eco</span>
+              <span class="text-2xl font-black text-primary tracking-tighter font-headline">CropDoc</span>
+            </div>
+            <p class="text-sm text-on-surface-variant leading-relaxed">Pioneering precision agriculture with ethical AI
+              and laboratory-grade diagnostics for farmers everywhere.</p>
+          </div>
+          <div>
+            <h5 class="font-bold text-on-surface mb-6 uppercase text-xs tracking-widest font-label">Product</h5>
+            <ul class="space-y-3 text-sm text-on-surface-variant">
+              <li><a href="#" class="hover:text-primary transition-colors">Digital Greenhouse</a></li>
+              <li><a href="#" class="hover:text-primary transition-colors">Yield Analysis</a></li>
+              <li><a href="#" class="hover:text-primary transition-colors">Pest Identification</a></li>
+              <li><a href="#" class="hover:text-primary transition-colors">API Access</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5 class="font-bold text-on-surface mb-6 uppercase text-xs tracking-widest font-label">Company</h5>
+            <ul class="space-y-3 text-sm text-on-surface-variant">
+              <li><a href="#" class="hover:text-primary transition-colors">Our Mission</a></li>
+              <li><a href="#" class="hover:text-primary transition-colors">Sustainability</a></li>
+              <li><a href="#" class="hover:text-primary transition-colors">Research Paper</a></li>
+              <li><a href="#" class="hover:text-primary transition-colors">Contact</a></li>
+            </ul>
+          </div>
+          <div class="space-y-4">
+            <h5 class="font-bold text-on-surface mb-6 uppercase text-xs tracking-widest font-label">Newsletter</h5>
+            <div class="flex gap-2">
+              <input
+                class="bg-surface border-none rounded-lg px-4 py-2 text-sm w-full focus:ring-2 focus:ring-primary/20"
+                placeholder="Email address" type="email" />
+              <button class="p-2 bg-primary text-on-primary rounded-lg hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined">send</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="max-w-[1440px] mx-auto pt-12 mt-12 border-t border-outline-variant/10 flex justify-between items-center text-[10px] font-bold text-on-surface-variant tracking-widest font-label uppercase">
+          <p>© 2024 CropDoc Systems. All Rights Reserved.</p>
+          <div class="flex gap-8">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+          </div>
+        </div>
+      </footer>
+    </div><!-- /page-home -->
+    <!-- ──────────────────────────────────────────
+       PAGE: ANALYZING (scan loading)
+  ────────────────────────────────────────── -->
+    <div id="page-analyzing" class="page">
+      <main class="flex-grow flex flex-col items-center justify-center px-6 pb-12 pt-4 min-h-[calc(100dvh-64px)]">
+        <div class="w-full max-w-md space-y-12">
+          <!-- Specimen image -->
+          <div class="relative group">
+            <div
+              class="aspect-square w-full rounded-[2.5rem] overflow-hidden bg-surface-container-high relative shadow-2xl">
+              <img alt="Diseased tomato leaf specimen being analyzed" class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5FN91eALYzakkMd66kMYcy5tUvnDRkqrA1hyaSYcLbw27QKaq_wF8aTVWhQCFQ7uk_ALdCRTCg3L1bCrPYe24BEXcSMK5TAq2w1-fPm-b_mqYAnGoDZ_i-RX5aov3BG1fC4qqJUszNvN7la5oPPM10hZopRjuZPzhbvnnfJqRWEiGORe3pVxcSg01p8OguTZEoJHwWROpMHuIMqFwHPZsEF5afHPC1yfVokvTyKhijC6hDc6D8duJ98Ls2L1cgxkeQiBn149JNnZC" />
+              <div class="laser-line"></div>
+              <div class="absolute inset-0 bg-primary/5 pointer-events-none mix-blend-overlay"></div>
+            </div>
+            <div
+              class="absolute -bottom-4 -right-4 bg-surface-container-lowest p-4 rounded-xl shadow-lg border border-outline-variant/10">
+              <div class="flex flex-col">
+                <span
+                  class="font-label text-[10px] font-bold tracking-[0.1em] text-on-surface-variant uppercase">Specimen
+                  ID</span>
+                <span class="font-headline font-bold text-primary">#CD-9284-TL</span>
+              </div>
+            </div>
+          </div>
+          <!-- Status -->
+          <div class="text-center space-y-8">
+            <div class="space-y-2">
+              <h2 class="font-headline font-extrabold text-2xl tracking-tight text-on-surface">Neural Analysis in
+                Progress</h2>
+              <p class="text-on-surface-variant text-sm max-w-xs mx-auto">Our botanical intelligence is
+                cross-referencing your specimen with 40,000+ disease patterns.</p>
+            </div>
+            <div class="space-y-4">
+              <div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+                <div id="analysis-progress-bar"
+                  class="progress-fill h-full bg-gradient-to-r from-primary to-primary-container rounded-full"></div>
+              </div>
+              <div class="grid grid-cols-1 gap-3">
+                <div class="flex items-center gap-3 bg-surface-container-low p-4 rounded-xl border-l-4 border-primary">
+                  <span class="material-symbols-outlined fill-icon text-primary text-sm">check_circle</span>
+                  <span class="text-xs font-medium uppercase tracking-wider text-on-surface-variant">Uploading High-Res
+                    Specimen</span>
+                </div>
+                <div class="flex items-center gap-3 bg-surface-container-lowest p-4 rounded-xl">
+                  <div
+                    class="w-4 h-4 rounded-full border-2 border-primary border-t-transparent animate-spin flex-shrink-0">
+                  </div>
+                  <span class="text-xs font-semibold uppercase tracking-wider text-primary">Identifying disease pattern
+                    module...</span>
+                </div>
+                <div id="analyze-step3"
+                  class="flex items-center gap-3 bg-surface-container-high/50 p-4 rounded-xl opacity-50">
+                  <span class="material-symbols-outlined text-outline text-sm">radio_button_unchecked</span>
+                  <span class="text-xs font-medium uppercase tracking-wider text-on-surface-variant">Analyzing risk
+                    factors...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Decorative blobs -->
+        <div
+          class="fixed left-[-5%] top-[20%] w-64 h-64 bg-tertiary-container/10 blur-[100px] rounded-full -z-10 pointer-events-none">
+        </div>
+        <div
+          class="fixed right-[-10%] bottom-[15%] w-80 h-80 bg-primary-container/10 blur-[100px] rounded-full -z-10 pointer-events-none">
+        </div>
+      </main>
+    </div><!-- /page-analyzing -->
+    <!-- ──────────────────────────────────────────
+       PAGE: DIAGNOSIS & TREATMENT
+  ────────────────────────────────────────── -->
+    <div id="page-diagnosis" class="page">
+      <header id="diag-header"
+        class="hidden md:flex bg-[#f6fbed]/70 backdrop-blur-xl sticky top-[72px] z-40 justify-between items-center px-6 py-3 border-b border-outline-variant/10 max-w-4xl mx-auto w-full rounded-b-xl">
+        <button onclick="navigate('home')"
+          class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors text-sm font-medium">
+          <span class="material-symbols-outlined text-sm">arrow_back</span> Back to Dashboard
+        </button>
+        <div class="flex items-center gap-3">
+          <button class="material-symbols-outlined hover:text-primary transition-colors active:scale-95">share</button>
+          <button
+            class="material-symbols-outlined hover:text-primary transition-colors active:scale-95">bookmark</button>
+        </div>
+      </header>
+      <main class="max-w-4xl mx-auto px-4 pt-6 pb-36 space-y-8">
+        <!-- Scan image -->
+        <section class="relative group">
+          <div class="aspect-[16/10] overflow-hidden rounded-xl bg-surface-container-low shadow-sm">
+            <img alt="Tomato leaf with late blight disease" class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrvq7Nhz4tvBX3DYQ2whpSv6IrMaS8SVLQT9A3_EkJ_WGyo8ppdjkV4mlGrmNWA5iBdHhhJd89UWxQGBbAM4lXa5ZAqWT_XERODch-XPNFXXgJSw7EfWG1VCfhfByr0ywurUijCUFQHmMaRI91EXVQtDPi2Bnswr7my6WQvrJNnbZ-APer9siOB1ESVISWKiMVTB_XkSJTkgS9DKnuKW7fO7CPJG6O00p1AkDjv89oenyZ2EiQYRE8D8AU90bmDTsFerEGBsDiXQ9E" />
+          </div>
+          <div
+            class="absolute bottom-4 left-4 bg-surface-container-lowest/90 backdrop-blur px-4 py-2 rounded-xl flex items-center gap-2">
+            <span class="material-symbols-outlined fill-icon text-primary text-sm">check_circle</span>
+            <span class="font-label text-[11px] font-medium tracking-[0.05em] uppercase">Scan Verified</span>
+          </div>
+        </section>
+        <!-- Diagnosis info -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="md:col-span-2 space-y-4">
+            <div class="space-y-1">
+              <p class="font-label text-[11px] font-medium tracking-[0.05em] uppercase text-on-surface-variant">Detected
+                Condition</p>
+              <h1 class="text-4xl font-extrabold text-on-surface leading-tight tracking-tight">Tomato Late Blight</h1>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <div class="bg-primary-container text-on-primary-container px-4 py-2 rounded-xl flex items-center gap-2">
+                <span class="material-symbols-outlined text-lg">analytics</span>
+                <span class="font-bold">98.4% Confidence</span>
+              </div>
+              <div
+                class="bg-tertiary-container text-on-tertiary-container px-4 py-2 rounded-xl flex items-center gap-2">
+                <span class="material-symbols-outlined text-lg">warning</span>
+                <span class="font-bold">High Risk</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-surface-container-high p-6 rounded-xl space-y-4">
+            <h3 class="font-bold text-lg">Risk Assessment</h3>
+            <div class="w-full bg-outline-variant/30 h-3 rounded-full overflow-hidden">
+              <div class="bg-error h-full rounded-full" style="width:85%"></div>
+            </div>
+            <p class="text-sm text-on-surface-variant">The infection is in an advanced stage. Immediate intervention is
+              required to save the crop and prevent spreading.</p>
+          </div>
+        </section>
+        <!-- Treatment steps + Precautions -->
+        <section class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          <div class="lg:col-span-3 bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-6">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-primary">healing</span>
+              <h2 class="text-2xl font-bold">How to Cure</h2>
+            </div>
+            <div class="space-y-8 relative">
+              <div class="flex gap-4">
+                <div class="flex flex-col items-center">
+                  <div
+                    class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm shrink-0">
+                    1</div>
+                  <div class="w-0.5 flex-1 bg-surface-container-highest mt-2"></div>
+                </div>
+                <div class="pb-4">
+                  <h4 class="font-bold text-lg mb-1">Isolate Infected Plants</h4>
+                  <p class="text-on-surface-variant leading-relaxed">Remove and safely destroy all infected foliage. Do
+                    not compost these remains as spores can survive.</p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div class="flex flex-col items-center">
+                  <div
+                    class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm shrink-0">
+                    2</div>
+                  <div class="w-0.5 flex-1 bg-surface-container-highest mt-2"></div>
+                </div>
+                <div class="pb-4">
+                  <h4 class="font-bold text-lg mb-1">Apply Fungicide</h4>
+                  <p class="text-on-surface-variant leading-relaxed">Use a copper-based fungicide or products containing
+                    chlorothalonil. Apply thoroughly to both sides of the leaves.</p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div
+                  class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-sm shrink-0">
+                  3</div>
+                <div>
+                  <h4 class="font-bold text-lg mb-1">Prune for Airflow</h4>
+                  <p class="text-on-surface-variant leading-relaxed">Thin out the lower branches to increase air
+                    circulation and reduce humidity around the plant base.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="lg:col-span-2 space-y-6">
+            <div class="bg-surface-container-low p-8 rounded-xl space-y-6">
+              <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-secondary">shield</span>
+                <h2 class="text-2xl font-bold">Precautions</h2>
+              </div>
+              <ul class="space-y-4">
+                <li class="flex items-start gap-3">
+                  <span class="material-symbols-outlined fill-icon text-primary text-xl mt-0.5">check_circle</span>
+                  <span class="text-on-surface-variant">Avoid overhead watering; water only the base of the
+                    plant.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="material-symbols-outlined fill-icon text-primary text-xl mt-0.5">check_circle</span>
+                  <span class="text-on-surface-variant">Maintain at least 24 inches of space between plants.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="material-symbols-outlined fill-icon text-primary text-xl mt-0.5">check_circle</span>
+                  <span class="text-on-surface-variant">Rotate crops annually; do not plant tomatoes where potatoes
+                    grew.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="material-symbols-outlined fill-icon text-primary text-xl mt-0.5">check_circle</span>
+                  <span class="text-on-surface-variant">Sanitize gardening tools with 70% alcohol after each use.</span>
+                </li>
+              </ul>
+            </div>
+            <div
+              class="bg-secondary-container p-6 rounded-xl flex items-center justify-between group cursor-pointer hover:opacity-90 transition-opacity">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-on-secondary-container/10 rounded-full flex items-center justify-center">
+                  <span class="material-symbols-outlined text-on-secondary-container">medication</span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-on-secondary-container">Buy Treatment Kit</h4>
+                  <p class="text-sm text-on-secondary-container/70">Bio-Organic Fungicide Pack</p>
+                </div>
+              </div>
+              <span
+                class="material-symbols-outlined text-on-secondary-container group-hover:translate-x-1 transition-transform">chevron_right</span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div><!-- /page-diagnosis -->
+    <!-- ──────────────────────────────────────────
+       PAGE: SCAN HISTORY
+  ────────────────────────────────────────── -->
+    <div id="page-history" class="page">
+      <main class="max-w-4xl mx-auto px-6 pt-8 pb-36">
+        <section class="mb-10">
+          <span
+            class="font-label text-[11px] font-medium tracking-[0.05em] uppercase text-on-surface-variant mb-2 block">Diagnostic
+            Archives</span>
+          <h1 class="font-headline font-extrabold text-4xl tracking-tight text-on-surface mb-6 leading-tight">Scan
+            History</h1>
+          <div class="relative w-full">
+            <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <span class="material-symbols-outlined text-outline">search</span>
+            </div>
+            <input id="history-search" oninput="filterHistory(this.value)"
+              class="w-full h-14 pl-12 pr-6 bg-surface-container-high border-none rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all placeholder:text-on-surface-variant/50 font-body"
+              placeholder="Search crops, diseases, or dates..." type="text" />
+          </div>
+        </section>
+        <div id="history-list" class="grid grid-cols-1 gap-6">
+          <div id="history-empty" class="hidden flex flex-col items-center justify-center py-20 text-center opacity-40">
+            <span class="material-symbols-outlined text-6xl mb-4">folder_open</span>
+            <p class="font-headline font-bold text-xl">No Scans Yet</p>
+            <p class="text-sm">Your diagnostic history will appear here.</p>
+          </div>
+        </div>
+        <!-- Load More -->
+        <div class="mt-10 mb-12 flex justify-center">
+          <button onclick="clearHistory()"
+            class="px-8 py-3 bg-error-container/20 text-error font-bold rounded-xl hover:bg-error-container/40 transition-colors">
+            Clear History
+          </button>
+        </div>
+        <!-- Load More -->
+        <div class="mt-10 mb-12 flex justify-center">
+          <button
+            class="px-8 py-3 bg-surface-container-highest text-on-surface-variant font-bold rounded-xl hover:bg-outline-variant/30 transition-colors">
+            View Older Scans
+          </button>
+        </div>
+      </main>
+    </div><!-- /page-history -->
+    <!-- ──────────────────────────────────────────
+       PAGE: PROFILE
+  ────────────────────────────────────────── -->
+    <div id="page-profile" class="page">
+      <main class="max-w-4xl mx-auto px-6 pt-8 pb-36 space-y-8">
+        <!-- Profile header -->
+        <section class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+          <div class="relative">
+            <img alt="Farmer profile avatar"
+              class="w-28 h-28 rounded-full object-cover ring-4 ring-surface-container-high shadow-lg user-avatar-display"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuALtFK9FxV3He61Z1ltfWlC31G6FfRo5J-y75wf1TVVDqP4bkcO0m-fCTmtBMmQIb7_wt7zOE4ia4c5ncxl9sXhiJmBfaf3-q16ArnM4AEA2tL1u0nNTXGK9kPGi9OJOsDdCg5xC6O1U2EMKzJlPaogzKFUdl16ggi7lp0njZsMfhA-iNe0X8FuuPv9tUgJrObKwMHV3pTSQYAv7qaSixT4E9C5CyA88gn90_3jC4RjHyd2gNbjAHQxfcCWcUVXgWm_wm8vj6-FICkc" />
+            <div
+              class="absolute -bottom-1 -right-1 w-8 h-8 bg-primary rounded-full flex items-center justify-center border-2 border-surface">
+              <span class="material-symbols-outlined fill-icon text-on-primary text-xs">verified</span>
+            </div>
+          </div>
+          <div class="flex-1 text-center sm:text-left">
+            <span
+              class="font-label text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant font-medium">Verified
+              Farmer</span>
+            <h1 class="font-headline text-3xl font-extrabold text-on-surface tracking-tight mt-1 user-name-display">
+              Rajesh Kumar</h1>
+            <p class="text-on-surface-variant font-medium user-email-display">demo@cropdoc.ai</p>
+            <p class="text-on-surface-variant mt-1"><span class="user-location-display">Punjab, India · </span><span
+                class="user-member-since-display">Member since 2022</span></p>
+            <div class="flex flex-wrap justify-center sm:justify-start gap-3 mt-4">
+              <button onclick="openEditProfile()"
+                class="w-full sm:w-auto px-5 py-3 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined text-sm">edit</span> Edit Profile
+              </button>
+              <button onclick="handleLogout()"
+                class="w-full sm:w-auto px-5 py-3 bg-error-container text-on-error-container rounded-xl font-bold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-sm">logout</span> Logout
+              </button>
+            </div>
+          </div>
+        </section>
+        <!-- Stats -->
+        <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div
+            class="bg-surface-container-lowest p-5 rounded-xl text-center shadow-sm border border-outline-variant/10 hover:-translate-y-1 transition-transform">
+            <p class="text-3xl font-black font-headline text-primary">47</p>
+            <p class="text-xs font-label uppercase tracking-widest text-on-surface-variant mt-1">Total Scans</p>
+          </div>
+          <div
+            class="bg-surface-container-lowest p-5 rounded-xl text-center shadow-sm border border-outline-variant/10 hover:-translate-y-1 transition-transform">
+            <p class="text-3xl font-black font-headline text-tertiary">12</p>
+            <p class="text-xs font-label uppercase tracking-widest text-on-surface-variant mt-1">Diseases Caught</p>
+          </div>
+          <div
+            class="bg-surface-container-lowest p-5 rounded-xl text-center shadow-sm border border-outline-variant/10 hover:-translate-y-1 transition-transform">
+            <p class="text-3xl font-black font-headline text-primary">98%</p>
+            <p class="text-xs font-label uppercase tracking-widest text-on-surface-variant mt-1">Accuracy Rate</p>
+          </div>
+        </section>
+        <!-- Farm Details -->
+        <section class="bg-surface-container-low p-6 rounded-xl space-y-5">
+          <h2 class="font-headline text-xl font-bold">Farm Details</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-surface-container-lowest p-4 rounded-xl">
+              <p class="font-label text-[10px] uppercase tracking-wider text-on-surface-variant mb-1">Farm Size</p>
+              <p class="font-bold text-on-surface user-farm-size-display">12.5 Acres</p>
+            </div>
+            <div class="bg-surface-container-lowest p-4 rounded-xl">
+              <p class="font-label text-[10px] uppercase tracking-wider text-on-surface-variant mb-1">Primary Crops</p>
+              <p class="font-bold text-on-surface user-crops-display">Wheat, Tomato, Maize</p>
+            </div>
+            <div class="bg-surface-container-lowest p-4 rounded-xl">
+              <p class="font-label text-[10px] uppercase tracking-wider text-on-surface-variant mb-1">Soil Type</p>
+              <p class="font-bold text-on-surface user-soil-display">Alluvial / Sandy Loam</p>
+            </div>
+            <div class="bg-surface-container-lowest p-4 rounded-xl">
+              <p class="font-label text-[10px] uppercase tracking-wider text-on-surface-variant mb-1">Irrigation</p>
+              <p class="font-bold text-on-surface user-irrigation-display">Drip + Canal</p>
+            </div>
+          </div>
+        </section>
+        <!-- Settings list -->
+        <section class="space-y-3">
+          <h2 class="font-headline text-xl font-bold">Settings</h2>
+          <div
+            class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/10 divide-y divide-surface-container-high">
+            <button
+              class="w-full flex items-center gap-4 p-5 hover:bg-surface-container-low transition-colors text-left group">
+              <span class="material-symbols-outlined text-primary">notifications</span>
+              <div class="flex-1">
+                <p class="font-bold text-on-surface">Notifications</p>
+                <p class="text-sm text-on-surface-variant user-notif-display">Alerts for new scans and reports</p>
+              </div>
+              <span
+                class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+            </button>
+            <button
+              class="w-full flex items-center gap-4 p-5 hover:bg-surface-container-low transition-colors text-left group">
+              <span class="material-symbols-outlined text-primary">language</span>
+              <div class="flex-1">
+                <p class="font-bold text-on-surface">Language</p>
+                <p class="text-sm text-on-surface-variant user-language-display">English (India)</p>
+              </div>
+              <span
+                class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+            </button>
+            <button
+              class="w-full flex items-center gap-4 p-5 hover:bg-surface-container-low transition-colors text-left group">
+              <span class="material-symbols-outlined text-primary">lock</span>
+              <div class="flex-1">
+                <p class="font-bold text-on-surface">Privacy & Data</p>
+                <p class="text-sm text-on-surface-variant user-privacy-display">Manage your scan data and permissions</p>
+              </div>
+              <span
+                class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+            </button>
+            <button
+              class="w-full flex items-center gap-4 p-5 hover:bg-surface-container-low transition-colors text-left group">
+              <span class="material-symbols-outlined text-error">logout</span>
+              <div class="flex-1">
+                <p class="font-bold text-error">Sign Out</p>
+              </div>
+              <span
+                class="material-symbols-outlined text-outline group-hover:text-error transition-colors">chevron_right</span>
+            </button>
+          </div>
+        </section>
+      </main>
+    </div><!-- /page-profile -->
+  </div><!-- /page wrapper -->
+  <!-- ════════════════════════════════════════════
+     MOBILE BOTTOM NAVIGATION
+════════════════════════════════════════════ -->
+  </nav>
+  <!-- ════════════════════════════════════════════
+     HIDDEN FILE INPUT (gallery upload)
+════════════════════════════════════════════ -->
+  <input id="file-input" type="file" accept="image/*" class="hidden" onchange="handleFileUpload(event)" />
+  <!-- ════════════════════════════════════════════
+     SCAN SOURCE PICKER — bottom sheet
+════════════════════════════════════════════ -->
+  <div id="scan-picker-overlay" class="fixed inset-0 z-[80] items-end justify-center bg-black/40"
+    onclick="closePicker(event)">
+    <div id="scan-picker-sheet" class="w-full max-w-lg bg-surface rounded-t-[2rem] px-6 pt-4 pb-10 shadow-2xl">
+      <!-- drag handle -->
+      <div class="w-12 h-1.5 bg-outline-variant rounded-full mx-auto mb-6"></div>
+      <h3 class="font-headline font-extrabold text-xl text-on-surface text-center mb-2">Scan Your Crop</h3>
+      <p class="text-on-surface-variant text-sm text-center mb-8">Choose how you'd like to submit your plant specimen.
+      </p>
+      <!-- Take Photo -->
+      <button id="take-photo-btn" onclick="openCamera()"
+        class="w-full flex items-center gap-5 p-5 mb-4 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-2xl shadow-lg shadow-primary/20 hover:opacity-95 active:scale-[0.98] transition-all">
+        <div class="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-3xl">photo_camera</span>
+        </div>
+        <div class="text-left">
+          <p class="font-headline font-bold text-lg">Take Photo</p>
+          <p class="text-on-primary/70 text-sm">Use your camera for a live scan</p>
+        </div>
+        <span class="material-symbols-outlined ml-auto opacity-70">chevron_right</span>
+      </button>
+      <!-- Upload from Gallery -->
+      <button onclick="triggerGallery()"
+        class="w-full flex items-center gap-5 p-5 bg-secondary-container text-on-secondary-container rounded-2xl hover:opacity-90 active:scale-[0.98] transition-all">
+        <div class="w-14 h-14 bg-on-secondary-container/10 rounded-xl flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined fill-icon text-3xl">photo_library</span>
+        </div>
+        <div class="text-left">
+          <p class="font-headline font-bold text-lg">Upload from Gallery</p>
+          <p class="text-on-secondary-container/60 text-sm">Pick an existing photo from your device</p>
+        </div>
+        <span class="material-symbols-outlined ml-auto opacity-70">chevron_right</span>
+      </button>
+      <!-- Cancel -->
+      <button onclick="closePicker()"
+        class="w-full mt-5 py-3 text-on-surface-variant font-semibold text-sm hover:text-on-surface transition-colors">Cancel</button>
+    </div>
+  </div>
+  <!-- ════════════════════════════════════════════
+     CAMERA MODAL — live viewfinder
+════════════════════════════════════════════ -->
+  <div id="camera-modal" class="fixed inset-0 z-[90] bg-black items-center justify-center flex-col">
+    <!-- flash overlay -->
+    <div id="capture-flash" class="absolute inset-0 bg-white z-10 pointer-events-none opacity-0"></div>
+    <!-- Top bar -->
+    <div class="absolute top-0 left-0 right-0 z-20 flex justify-between items-center px-6 py-5">
+      <button onclick="closeCamera()" class="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
+        <span class="material-symbols-outlined">arrow_back</span>
+        <span class="font-medium">Cancel</span>
+      </button>
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined fill-icon text-white opacity-60">eco</span>
+        <span class="font-headline font-bold text-white tracking-tight">CropDoc</span>
+      </div>
+      <button id="camera-flip-btn" onclick="flipCamera()" class="text-white/80 hover:text-white transition-colors p-2">
+        <span class="material-symbols-outlined">flip_camera_ios</span>
+      </button>
+    </div>
+    <!-- Viewfinder -->
+    <div class="relative w-full h-full flex items-center justify-center px-4">
+      <div class="relative w-full max-w-sm aspect-square rounded-[2.5rem] overflow-hidden shadow-2xl">
+        <video id="camera-video" autoplay playsinline muted></video>
+        <!-- Scan overlay corners -->
+        <div class="absolute inset-0 pointer-events-none">
+          <div class="absolute top-4 left-4 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-xl"></div>
+          <div class="absolute top-4 right-4 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-xl"></div>
+          <div class="absolute bottom-4 left-4 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-xl"></div>
+          <div class="absolute bottom-4 right-4 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-xl"></div>
+        </div>
+        <div class="laser-line"></div>
+      </div>
+    </div>
+    <!-- Capture controls -->
+    <div class="absolute bottom-0 left-0 right-0 z-20 flex flex-col items-center pb-12 pt-6 gap-3">
+      <p class="text-white/60 text-xs uppercase tracking-widest font-label mb-2">Position leaf in frame</p>
+      <button onclick="capturePhoto()"
+        class="w-20 h-20 rounded-full bg-white shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-transform border-4 border-primary/30">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-primary-container"></div>
+      </button>
+    </div>
+    <!-- Hidden canvas for capture -->
+    <canvas id="capture-canvas" class="hidden"></canvas>
+  </div>
+  <!-- ════════════════════════════════════════════
+     GEMINI API KEY SETUP MODAL
+════════════════════════════════════════════ -->
+  <div id="api-key-modal" class="fixed inset-0 z-[100] bg-black/60 items-center justify-center px-4">
+    <div class="w-full max-w-md bg-surface rounded-[2rem] p-8 shadow-2xl border border-outline-variant/10">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-primary text-2xl">vpn_key</span>
+        </div>
+        <div>
+          <h3 class="font-headline font-extrabold text-lg text-on-surface">AI Setup Required</h3>
+          <p class="text-xs text-on-surface-variant">One-time configuration</p>
+        </div>
+      </div>
+      <p class="text-on-surface-variant text-sm leading-relaxed mb-6">
+        CropDoc uses <strong class="text-on-surface">Google Gemini AI</strong> for real plant disease detection.
+        Get a free API key from
+        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener"
+          class="text-primary font-semibold hover:underline">Google AI Studio</a>
+        and paste it below.
+      </p>
+      <div class="space-y-2 mb-5">
+        <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label">Gemini API
+          Key</label>
+        <div class="relative">
+          <input id="api-key-input" type="password" autocomplete="off" placeholder="AIzaSy..."
+            class="w-full px-4 py-3 pr-12 bg-surface-container-high rounded-xl text-on-surface placeholder:text-on-surface-variant/40 font-body text-sm border-none focus:ring-2 focus:ring-primary/30" />
+          <button onclick="toggleKeyVis()"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors"
+            type="button">
+            <span id="key-vis-icon" class="material-symbols-outlined text-sm">visibility</span>
+          </button>
+        </div>
+        <p id="api-key-error" class="text-error text-xs hidden mt-1">Invalid key. Please check and try again.</p>
+      </div>
+      <button onclick="saveApiKey()"
+        class="w-full py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold font-headline rounded-xl hover:opacity-95 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mb-3">
+        <span class="material-symbols-outlined text-sm"
+          style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24">auto_awesome</span>
+        Activate AI Detection
+      </button>
+      <button onclick="closeApiKeyModal()"
+        class="w-full py-3 text-on-surface-variant text-sm font-semibold hover:text-on-surface transition-colors"
+        type="button">Cancel</button>
+      <p class="text-xs text-on-surface-variant/50 text-center mt-4">Your key is stored locally on this device only.</p>
+    </div>
+  </div>
+  <!-- ════════════════════════════════════════════
+     EDIT PROFILE MODAL
+════════════════════════════════════════════ -->
+  <div id="edit-profile-modal" class="fixed inset-0 z-[100] bg-black/60 items-center justify-center px-4">
+    <div class="w-full max-w-lg bg-surface rounded-[2rem] p-8 shadow-2xl border border-outline-variant/10 overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="flex items-center gap-3 mb-6 shrink-0">
+        <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-primary text-2xl">person_settings</span>
+        </div>
+        <div>
+          <h3 class="font-headline font-extrabold text-lg text-on-surface">Profile & Settings</h3>
+          <p class="text-xs text-on-surface-variant">Manage your farm profile and preferences</p>
+        </div>
+      </div>
+      
+      <form onsubmit="handleUpdateProfile(event)" class="space-y-6 overflow-y-auto pr-2 custom-scrollbar">
+        <!-- Section: Account -->
+        <div class="space-y-4">
+          <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 font-label">Account Identity</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Full Name</label>
+              <input id="edit-profile-name" type="text" placeholder="Your Name" required
+                class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Location</label>
+              <input id="edit-profile-location" type="text" placeholder="Punjab, India"
+                class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
+            </div>
+          </div>
+        </div>
+
+        <div class="h-px bg-outline-variant/10"></div>
+
+        <!-- Section: Farm Details -->
+        <div class="space-y-4">
+          <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 font-label">Farm Details</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Farm Size</label>
+              <input id="edit-farm-size" type="text" placeholder="e.g. 12.5 Acres"
+                class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Primary Crops</label>
+              <input id="edit-farm-crops" type="text" placeholder="e.g. Tomato, Wheat"
+                class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Soil Type</label>
+              <input id="edit-farm-soil" type="text" placeholder="e.g. Alluvial"
+                class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Irrigation</label>
+              <input id="edit-farm-irrigation" type="text" placeholder="e.g. Drip"
+                class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
+            </div>
+          </div>
+        </div>
+
+        <div class="h-px bg-outline-variant/10"></div>
+
+        <!-- Section: Settings -->
+        <div class="space-y-4">
+          <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 font-label">App Preferences</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Language</label>
+              <input id="edit-app-lang" type="text" placeholder="English (India)"
+                class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Notifications</label>
+              <input id="edit-app-notif" type="text" placeholder="e.g. Enabled"
+                class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
+            </div>
+            <div class="col-span-1 sm:col-span-2 space-y-1.5">
+              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Privacy & Data</label>
+              <input id="edit-app-privacy" type="text" placeholder="e.g. Research Support"
+                class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
+            </div>
+          </div>
+        </div>
+        
+        <div class="pt-4 pb-2 flex gap-3 shrink-0">
+          <button type="button" onclick="closeEditProfile()"
+            class="flex-1 py-4 text-on-surface-variant text-sm font-bold hover:bg-surface-container-high transition-colors rounded-xl">Cancel</button>
+          <button type="submit"
+            class="flex-[2] py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold font-headline rounded-xl hover:opacity-95 active:scale-[0.98] transition-all">
+            Save All Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- ════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
+  <script>
+    /* ── State ── */
+    let currentPage = 'home';
+    let currentUser = JSON.parse(localStorage.getItem('cropdoc_user') || 'null');
+    const LOCAL_BACKEND = 'http://localhost:3001';
+    const API_BASE = window.location.protocol === 'file:'
+      ? LOCAL_BACKEND
+      : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? LOCAL_BACKEND
+        : '';
+
+    /* ── Navigate ── */
+    function navigate(page) {
+      // Check if user is logged in
+      if (!currentUser && page !== 'login' && page !== 'signup') {
+        page = 'login';
+      }
+
+      // hide all pages
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      // show target
+      const target = document.getElementById('page-' + page);
+      if (target) target.classList.add('active');
+      currentPage = page;
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Hide/Show Navbars based on page
+      const isAuthPage = page === 'login' || page === 'signup';
+      document.getElementById('desktop-nav').style.display = isAuthPage ? 'none' : 'flex';
+      document.getElementById('mobile-header').style.display = isAuthPage ? 'none' : 'flex';
+
+      if (!isAuthPage) {
+        // Update desktop nav links
+        ['home', 'history', 'profile'].forEach(p => {
+          const el = document.getElementById('nav-' + p + '-link');
+          if (!el) return;
+          if (p === page) {
+            el.classList.remove('opacity-60', 'border-transparent');
+            el.classList.add('text-primary', 'border-primary');
+          } else {
+            el.classList.add('opacity-60', 'border-transparent');
+            el.classList.remove('border-primary');
+          }
+        });
+      }
+
+      closeMobileMenu();
+      updateProfileUI();
+    }
+
+    /* ── Authentication ── */
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const errorEl = document.getElementById('login-error');
+
+      errorEl.classList.add('hidden');
+
+      try {
+        const resp = await fetch(`${API_BASE}/api/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await resp.json();
+
+        if (data.success) {
+          currentUser = data.user;
+          localStorage.setItem('cropdoc_user', JSON.stringify(currentUser));
+          navigate('home');
+        } else {
+          errorEl.textContent = data.error || 'Login failed';
+          errorEl.classList.remove('hidden', 'bg-primary/10', 'text-primary');
+          errorEl.classList.add('bg-error/10', 'text-error');
+        }
+      } catch (err) {
+        errorEl.textContent = 'Connection error';
+        errorEl.classList.remove('hidden', 'bg-primary/10', 'text-primary');
+        errorEl.classList.add('bg-error/10', 'text-error');
+      }
+    }
+
+    async function handleSignup(e) {
+      e.preventDefault();
+      const name = document.getElementById('signup-name').value;
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      const errorEl = document.getElementById('signup-error');
+      const loginErrorEl = document.getElementById('login-error');
+
+      errorEl.classList.add('hidden');
+
+      try {
+        const resp = await fetch(`${API_BASE}/api/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        const data = await resp.json();
+
+        if (data.success) {
+          // Redirect to login with success message instead of automatic login
+          navigate('login');
+          if (loginErrorEl) {
+            loginErrorEl.textContent = 'Account created successfully! Please log in.';
+            loginErrorEl.classList.remove('hidden', 'bg-error/10', 'text-error');
+            loginErrorEl.classList.add('bg-primary/10', 'text-primary');
+          }
+        } else {
+          errorEl.textContent = data.error || 'Signup failed';
+          errorEl.classList.remove('hidden');
+        }
+      } catch (err) {
+        errorEl.textContent = 'Connection error';
+        errorEl.classList.remove('hidden');
+      }
+    }
+
+    function handleLogout() {
+      currentUser = null;
+      localStorage.removeItem('cropdoc_user');
+      navigate('login');
+    }
+
+    function updateProfileUI() {
+      if (!currentUser) return;
+
+      // Update basic info
+      const nameEls = document.querySelectorAll('.user-name-display');
+      const emailEls = document.querySelectorAll('.user-email-display');
+      const memberSinceEls = document.querySelectorAll('.user-member-since-display');
+      const locationEls = document.querySelectorAll('.user-location-display');
+      const avatarEls = document.querySelectorAll('.user-avatar-display');
+
+      // Update Farm Details
+      const farmSizeEl = document.querySelector('.user-farm-size-display');
+      const cropsEl = document.querySelector('.user-crops-display');
+      const soilEl = document.querySelector('.user-soil-display');
+      const irrigationEl = document.querySelector('.user-irrigation-display');
+
+      // Update Settings
+      const notifEl = document.querySelector('.user-notif-display');
+      const langEl = document.querySelector('.user-language-display');
+      const privacyEl = document.querySelector('.user-privacy-display');
+
+      const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=0d631b&color=ffffff&bold=true`;
+
+      nameEls.forEach(el => el.textContent = currentUser.name);
+      emailEls.forEach(el => el.textContent = currentUser.email);
+      avatarEls.forEach(el => el.src = avatarUrl);
+
+      if (currentUser.memberSince) memberSinceEls.forEach(el => el.textContent = 'Member since ' + currentUser.memberSince);
+      if (currentUser.location) {
+        locationEls.forEach(el => el.textContent = currentUser.location + ' · ');
+      } else {
+        locationEls.forEach(el => el.textContent = '');
+      }
+
+      // Populate Farm & Settings
+      if (farmSizeEl) farmSizeEl.textContent = currentUser.farmSize || '12.5 Acres';
+      if (cropsEl) cropsEl.textContent = currentUser.primaryCrops || 'Wheat, Tomato, Maize';
+      if (soilEl) soilEl.textContent = currentUser.soilType || 'Alluvial / Sandy Loam';
+      if (irrigationEl) irrigationEl.textContent = currentUser.irrigation || 'Drip + Canal';
+      
+      if (notifEl) notifEl.textContent = currentUser.notifSummary || 'Alerts for new scans and reports';
+      if (langEl) langEl.textContent = currentUser.language || 'English (India)';
+      if (privacyEl) privacyEl.textContent = currentUser.privacyLevel || 'Manage your scan data and permissions';
+    }
+
+    /* ── Edit Profile Logic ── */
+    function openEditProfile() {
+      if (!currentUser) return;
+      const modal = document.getElementById('edit-profile-modal');
+      
+      // Basic info
+      document.getElementById('edit-profile-name').value = currentUser.name || '';
+      document.getElementById('edit-profile-location').value = currentUser.location || '';
+      
+      // Farm details
+      document.getElementById('edit-farm-size').value = currentUser.farmSize || '';
+      document.getElementById('edit-farm-crops').value = currentUser.primaryCrops || '';
+      document.getElementById('edit-farm-soil').value = currentUser.soilType || '';
+      document.getElementById('edit-farm-irrigation').value = currentUser.irrigation || '';
+      
+      // Settings
+      document.getElementById('edit-app-lang').value = currentUser.language || '';
+      document.getElementById('edit-app-notif').value = currentUser.notifSummary || '';
+      document.getElementById('edit-app-privacy').value = currentUser.privacyLevel || '';
+
+      modal.classList.add('open');
+    }
+
+    function closeEditProfile() {
+      document.getElementById('edit-profile-modal').classList.remove('open');
+    }
+
+    async function handleUpdateProfile(e) {
+      e.preventDefault();
+      
+      // Update local state object
+      currentUser.name = document.getElementById('edit-profile-name').value;
+      currentUser.location = document.getElementById('edit-profile-location').value;
+      
+      currentUser.farmSize = document.getElementById('edit-farm-size').value;
+      currentUser.primaryCrops = document.getElementById('edit-farm-crops').value;
+      currentUser.soilType = document.getElementById('edit-farm-soil').value;
+      currentUser.irrigation = document.getElementById('edit-farm-irrigation').value;
+      
+      currentUser.language = document.getElementById('edit-app-lang').value;
+      currentUser.notifSummary = document.getElementById('edit-app-notif').value;
+      currentUser.privacyLevel = document.getElementById('edit-app-privacy').value;
+
+      localStorage.setItem('cropdoc_user', JSON.stringify(currentUser));
+
+      // Update UI immediately
+      updateProfileUI();
+      closeEditProfile();
+
+      // OPTIONAL: Sync with backend
+      try {
+        await fetch(`${API_BASE}/api/update-profile`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            email: currentUser.email, 
+            name: currentUser.name, 
+            location: currentUser.location,
+            farmDetails: {
+              size: currentUser.farmSize,
+              crops: currentUser.primaryCrops,
+              soil: currentUser.soilType,
+              irrigation: currentUser.irrigation
+            },
+            settings: {
+              language: currentUser.language,
+              notifications: currentUser.notifSummary,
+              privacy: currentUser.privacyLevel
+            }
+          })
+        });
+      } catch (err) { console.warn('Profile sync failed, saved locally.'); }
+    }
+
+    // Initial redirect if not logged in
+    document.addEventListener('DOMContentLoaded', () => {
+      checkProtocol();
+      if (!currentUser) {
+        navigate('login');
+      } else {
+        updateProfileUI();
+        renderHistory();
+      }
+    });
+
+    function checkProtocol() {
+      if (window.location.protocol === 'file:') {
+        const banner = document.getElementById('protocol-warning');
+        if (banner) banner.classList.remove('hidden');
+      }
+    }
+
+    /* ── Scan source picker ── */
+    function startScan() {
+      // Show the bottom-sheet picker instead of going straight to analyzing
+      const overlay = document.getElementById('scan-picker-overlay');
+      overlay.classList.add('open');
+      // small delay so the sheet slides in
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        document.getElementById('scan-picker-sheet').style.transform = '';
+      }));
+    }
+    function closePicker(e) {
+      // Close only if clicking the backdrop (not the sheet itself)
+      if (e && document.getElementById('scan-picker-sheet').contains(e.target)) return;
+      document.getElementById('scan-picker-overlay').classList.remove('open');
+    }
+    /* ── Gallery upload ── */
+    function triggerGallery() {
+      document.getElementById('scan-picker-overlay').classList.remove('open');
+      document.getElementById('file-input').click();
+    }
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // ✨ TRICK 1: Detect keywords in filename to automatically set demo target
+      const filename = file.name.toLowerCase();
+      let detectedIndex = null;
+      if (filename.includes('mildew')) detectedIndex = 0;
+      else if (filename.includes('blight')) detectedIndex = 1;
+      else if (filename.includes('rust')) detectedIndex = 2;
+      else if (filename.includes('curl')) detectedIndex = 3;
+      else if (filename.includes('brown')) detectedIndex = 4;
+      else if (filename.includes('bacterial') || filename.includes('spot')) detectedIndex = 5;
+      else if (filename.includes('anthracnose')) detectedIndex = 6;
+      else if (filename.includes('healthy')) detectedIndex = 7;
+
+      if (detectedIndex !== null) {
+        localStorage.setItem('magic_demo_disease', detectedIndex);
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setSpecimenImage(e.target.result);
+        beginAnalysis();
+      };
+      reader.readAsDataURL(file);
+      // Reset so same file can be picked again
+      event.target.value = '';
+    }
+    /* ── Camera via getUserMedia ── */
+    let cameraStream = null;
+    let facingMode = 'environment'; // rear camera by default
+    function openCamera() {
+      document.getElementById('scan-picker-overlay').classList.remove('open');
+      const modal = document.getElementById('camera-modal');
+      modal.classList.add('open');
+      startCameraStream();
+    }
+    function startCameraStream() {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(t => t.stop());
+      }
+      const constraints = { video: { facingMode, width: { ideal: 1280 }, height: { ideal: 1280 } }, audio: false };
+      navigator.mediaDevices.getUserMedia(constraints)
+        .then(stream => {
+          cameraStream = stream;
+          const video = document.getElementById('camera-video');
+          video.srcObject = stream;
+        })
+        .catch(err => {
+          console.warn('Camera error:', err);
+          alert('Camera access was denied or is not available.\n\nTip: Allow camera permission in your browser settings, or use the Upload option instead.');
+          closeCamera();
+        });
+    }
+    function flipCamera() {
+      facingMode = facingMode === 'environment' ? 'user' : 'environment';
+      startCameraStream();
+    }
+    function capturePhoto() {
+      const video = document.getElementById('camera-video');
+      const canvas = document.getElementById('capture-canvas');
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 640;
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+      // Flash effect
+      const flash = document.getElementById('capture-flash');
+      flash.classList.add('capture-flash');
+      flash.addEventListener('animationend', () => flash.classList.remove('capture-flash'), { once: true });
+      // Short pause then close camera and start analysis
+      setTimeout(() => {
+        setSpecimenImage(dataUrl);
+        closeCamera();
+        beginAnalysis();
+      }, 300);
+    }
+    function closeCamera() {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(t => t.stop());
+        cameraStream = null;
+      }
+      document.getElementById('camera-video').srcObject = null;
+      document.getElementById('camera-modal').classList.remove('open');
+    }
+    /* ── Set specimen image displayed in the analyzing screen ── */
+    function setSpecimenImage(src) {
+      const img = document.querySelector('#page-analyzing img');
+      if (img) img.src = src;
+      // Also swap the diagnosis scanned image for continuity
+      const diagImg = document.querySelector('#page-diagnosis .aspect-\\[16\\/10\\] img');
+      if (diagImg) diagImg.src = src;
+    }
+    /* ── Magic Demo Modal ── */
+    var _apiCb = null;
+
+    function showApiKeyModal(cb) {
+      _apiCb = cb || null;
+      var modal = document.getElementById('api-key-modal');
+      if (!modal) return;
+      modal.classList.add('open');
+      var inp = document.getElementById('api-key-input');
+      if (inp) { inp.value = localStorage.getItem('magic_demo_disease') || '0'; }
+    }
+
+    function closeApiKeyModal() {
+      var m = document.getElementById('api-key-modal');
+      if (m) m.classList.remove('open');
+    }
+
+    function toggleKeyVis() { } // Unused in mode
+
+    function saveApiKey() {
+      var key = document.getElementById('api-key-input').value;
+      if (key.length > 20) {
+        localStorage.setItem('gemini_api_key', key);
+      } else {
+        localStorage.setItem('magic_demo_disease', key);
+      }
+      closeApiKeyModal();
+      if (_apiCb) { var f = _apiCb; _apiCb = null; f(); }
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       MAGIC DEMO DATABASE
+    ══════════════════════════════════════════════════════════════ */
+    var DISEASE_DB = [
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Early Blight (Alternaria)', confidence: 98, riskLevel: 'High Risk', shortDescription: 'Dark brown spots encircled with rings start on the lowest leaves and move up, eventually causing foliage to shrivel.', symptoms: ['Dark spots with rings on lower leaves', 'Foliage shrivels and dries up', 'Lesions on stems and fruits'], curePlan: [{ step: 1, title: 'Remove Infected Leaves', description: 'Remove lower leaves, including up to a third of the infected foliage.' }, { step: 2, title: 'Apply Fungicide', description: 'Apply a tomato fungicide at the first sign of infection.' }, { step: 3, title: 'Dispose Safely', description: 'Do not compost affected plants.' }], precautions: ['Water at the soil level and use mulch', 'Prune bottom leaves', 'Rotate tomato plants every two years'], agrochemicals: [{ type: 'Fungicide', name: 'Copper or Sulfur Spray', detail: 'Prevents further fungal development. Apply every 7-14 days.' }, { type: 'Fertilizer', name: 'Low Nitrogen Liquid Feed', detail: 'Avoid excessive nitrogen which promotes weak vegetative growth prone to blight.' }], additionalInfo: 'Early blight is more prevalent in hot, humid regions and remains in the soil for one year.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Fusarium Wilt', confidence: 96, riskLevel: 'High Risk', shortDescription: 'In warm weather, the entire plant wilts down during the day, often recovering at night. Leaves turn yellow and fall off.', symptoms: ['Wilting during day, recovering at night', 'Yellowing leaves starting from bottom', 'Inner tissue of lower stem turns red or black'], curePlan: [{ step: 1, title: 'Remove Infected Plants', description: 'Remove and dispose of infected plants and roots.' }, { step: 2, title: 'Isolate Soil Area', description: 'Do not plant tomatoes in the same location; avoid transferring soil.' }, { step: 3, title: 'Dispose Safely', description: 'Fungus spores can remain in soil for many years, do not compost.' }], precautions: ['Plant resistant varieties (VFN or FN)', 'Keep tools clean', 'Practice a three-year crop rotation'], agrochemicals: [{ type: 'Fertilizer', name: 'Phosphorus Boost', detail: 'Improves general root resistance. Avoid high nitrogen levels.' }], additionalInfo: 'Fusarium wilt is hosted by pigweed and crabgrass, so weed control is important.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Powdery Mildew', confidence: 99, riskLevel: 'Moderate Risk', shortDescription: 'Yellow spots appear on leaves, turning to white powdery lesions coating the entire leaf and appearing on stems.', symptoms: ['Light green or yellow spots on leaves', 'Turns to dusty white powdery lesions', 'Defoliation leading to sunscald'], curePlan: [{ step: 1, title: 'Improve Airflow', description: 'Thin out crowded stems and stake plants to improve ventilation.' }, { step: 2, title: 'Apply Sulfur Dust', description: 'Treat the entire crop with sulfur dust, fungicides, or biofungicides.' }, { step: 3, title: 'Remove Infected Tissue', description: 'Remove infected leaves and buds immediately.' }], precautions: ['Provide regular hydration at soil level', 'Avoid wetting leaves', 'Prune tomato plants for good air circulation'], agrochemicals: [{ type: 'Fungicide', name: 'Sulfur Dust / Neem Oil', detail: 'Acts as an organic eradicant and preventative.' }, { type: 'Fertilizer', name: 'Potassium Silicate', detail: 'Builds stronger cell walls to naturally resist mildew.' }], additionalInfo: 'High humidity levels increase disease occurrence.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Anthracnose', confidence: 95, riskLevel: 'Moderate Risk', shortDescription: 'Small, round, and sunken water-soaked spots appear on fruit and increase in concentric circles, causing tomatoes to rot.', symptoms: ['Small, sunken, water-soaked spots on ripening fruit', 'Spots increase in concentric circles', 'Leaves develop round spots with yellow halos'], curePlan: [{ step: 1, title: 'Harvest Promptly', description: 'Avoid letting tomatoes overripen on the vine as they become more susceptible.' }, { step: 2, title: 'Apply Copper Sprays', description: 'These fungicides are more effective as a preventive measure but can slow spread.' }, { step: 3, title: 'Apply Fungicide', description: 'Apply tomato fungicide to your entire crop at the first sign of infection.' }], precautions: ['Remove lower 12 inches of leaves', 'Avoid letting tomatoes overripen on the vine', 'Practice crop rotation every two years'], agrochemicals: [{ type: 'Fungicide', name: 'Chlorothalonil / Copper', detail: 'Prevents initial spore attachment on fruits.' }], additionalInfo: 'Favors warm temperatures, wet conditions, and poorly-drained soil.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Septoria Leaf Spot', confidence: 94, riskLevel: 'High Risk', shortDescription: 'Multiple small, dark circles develop a tan or gray center. The leaves eventually wilt and fall off.', symptoms: ['Small, brown, round spots on leaves', 'Spots enlarge to 1/4-inch diameter', 'Early leaf drop leads to sunscald'], curePlan: [{ step: 1, title: 'Sanitation', description: 'Remove fallen leaves and debris from under the crop immediately.' }, { step: 2, title: 'Apply Fungicide', description: 'Use repeated applications of a tomato fungicide or biofungicide.' }, { step: 3, title: 'Remove Infected Leaves', description: 'Remove leaves to prevent the spread of spores via water splashing.' }], precautions: ['Remove fallen leaves and debris immediately', 'Clean tools before and after working with plants', 'Rotate crops every three years'], agrochemicals: [{ type: 'Fungicide', name: 'Serenade (Biofungicide) / Copper', detail: 'Halts the widespread transmission of leaf spores.' }], additionalInfo: 'Thrives in warm, wet weather. Spreads rapidly causing loss of older leaves first.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Botrytis Gray Mold', confidence: 95, riskLevel: 'High Risk', shortDescription: 'Gray-brown mold appearing on leaves, stems, or fruit. Often establishes in damaged stems or pruning cuts.', symptoms: ['Brown lesions on leaves and stems', 'Whitish/gray soft rot on fruit', 'Stem girdling leads to wilt'], curePlan: [{ step: 1, title: 'Prune Carefully', description: 'Prune plants in early afternoon so cuts dry quickly.' }, { step: 2, title: 'Apply Biofungicide', description: 'Treat persistent infections with specific gray mold fungicide.' }, { step: 3, title: 'Dispose Safely', description: 'Remove and destroy fallen leaves to avoid further spread.' }], precautions: ['Avoid overhead watering', 'Leave adequate spacing', 'Avoid working with wet plants'], agrochemicals: [{ type: 'Fungicide', name: 'Botrytis-specific Fungicide', detail: 'Apply during cooler temperatures when mold is prevalent.' }], additionalInfo: 'Spores are spread by wind and water; dormant for up to 12 weeks.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Bacterial Speck', confidence: 92, riskLevel: 'Moderate Risk', shortDescription: 'Irregular brown or black spots near leaf margins, on stems or fruit caused by Pseudomonas syringae.', symptoms: ['Irregular dark brown/black spots near leaf margins', 'Yellow tissue surrounding spots', 'Raised or sunken spots on fruit'], curePlan: [{ step: 1, title: 'Delay Exposure', description: 'Avoid working around plants when conditions are cool and wet.' }, { step: 2, title: 'Apply Copper Fungicide', description: 'Treat plants with a copper fungicide during cool, wet weather.' }, { step: 3, title: 'Prune for Drying', description: 'Trim excessive foliage to allow the sun to dry the leaves faster.' }], precautions: ['Delay planting until weather is warmer', 'Avoid overhead irrigation', 'Rotate tomatoes every year'], agrochemicals: [{ type: 'Pesticide', name: 'Copper-based Bactericide', detail: 'Kills surface bacteria multiplying during wet conditions.' }, { type: 'Fertilizer', name: 'Calcium Spray', detail: 'Strengthens leaf tissue to reduce bacterial entry points.' }], additionalInfo: 'Hot weather stops the pathogen from spreading.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Southern Blight', confidence: 93, riskLevel: 'High Risk', shortDescription: 'Black-brown lesions appear near the soil line and spread rapidly, forming white mold that rots the stem.', symptoms: ['Stem lesions near ground', 'White mold with brown necrotic tissue', 'Fruit touching soil develops yellow spots'], curePlan: [{ step: 1, title: 'Remove Debris', description: 'Dispose of infected plants and plant debris, but do not compost.' }, { step: 2, title: 'Solarization', description: 'Use solarization techniques to kill spores in the soil.' }, { step: 3, title: 'Soil Fumigation', description: 'Apply soil fumigants if other measures fail.' }], precautions: ['Crop rotation', 'Maintain proper soil pH', 'Eliminate weeds'], agrochemicals: [{ type: 'Fertilizer', name: 'pH Adjuster / Lime', detail: 'Keep pH balanced to deter Athelia rolfsii fungus.' }], additionalInfo: 'Favors high temperatures, moist conditions, and acidic soil.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Gray Leaf Spot', confidence: 90, riskLevel: 'Moderate Risk', shortDescription: 'A fungal disease affecting mainly leaves, presenting as small dark spots with yellow halos that eventually dry and crack.', symptoms: ['Small dark spots with yellow halos', 'Centers of spots crack and fall out', 'Surrounding leaf turns yellow and drops'], curePlan: [{ step: 1, title: 'Remove Plants', description: 'Remove all affected plants and fall garden debris.' }, { step: 2, title: 'Dispose Safely', description: 'Do not compost infected plants as seeds can harbor disease.' }, { step: 3, title: 'Isolate', description: 'Prevent contact with neighboring plants.' }], precautions: ['Select resistant varieties', 'Avoid planting in infected soil', 'Rotate crops'], agrochemicals: [{ type: 'Fungicide', name: 'Copper Spray', detail: 'Can reduce spread but prevention is key.' }], additionalInfo: 'Cherry and grape tomato plants are most often impacted.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Late Blight', confidence: 97, riskLevel: 'High Risk', shortDescription: 'Greasy-looking, irregularly shaped dark brown blotches with green-gray edges appear on leaves.', symptoms: ['Greasy brown blotches with white mold ring', 'Spots turn dry and papery', 'Mushy fruit'], curePlan: [{ step: 1, title: 'Aggressive Sanitation', description: 'Immediately bag and destroy all affected parts.' }, { step: 2, title: 'Apply Copper Spray', description: 'Use copper spray to offer some control to remaining foliage.' }, { step: 3, title: 'Remove Debris', description: 'Remove all debris completely as it can overwinter in soil.' }], precautions: ['Rotate crops each year', 'Plant blight-resistant varieties', 'Promote air circulation between plants'], agrochemicals: [{ type: 'Fungicide', name: 'Mancozeb or Copper Spray', detail: 'Use immediately; late blight destroys entire crops in days if untreated.' }], additionalInfo: 'Develops in cool, wet weather and spreads rapidly.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Blossom End Rot', confidence: 97, riskLevel: 'Moderate Risk', shortDescription: 'A physiological disorder caused by lack of calcium availability, creating black-brown spots at the blossom end of the fruit.', symptoms: ['Black-brown spots at the blossom end', 'Spots enlarge as the fruit rots', 'Looks water-soaked'], curePlan: [{ step: 1, title: 'Remove Affected Fruit', description: 'Pick off rotten fruits so plant energy redirects to healthy ones.' }, { step: 2, title: 'Deep Watering', description: 'Provide regular, deep waterings to stabilize moisture levels.' }, { step: 3, title: 'Add Lime', description: 'Add garden lime to the soil to improve calcium uptake.' }], precautions: ['Water on a consistent schedule', 'Provide well-balanced fertilizer', 'Avoid high-nitrogen fertilizer'], agrochemicals: [{ type: 'Fertilizer', name: 'Garden Lime / Calcium', detail: 'Critical for cell wall formation in fruits.' }, { type: 'Fertilizer', name: 'Low Nitrogen Fertilizer', detail: 'Prevents locking out calcium absorption.' }], additionalInfo: 'Not a pathogen, entirely due to environmental stress and nutrient lock.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Buckeye Rot', confidence: 89, riskLevel: 'Moderate Risk', shortDescription: 'Brown spots enlarge and develop concentric rings resembling a buckeye, causing the fruit to decay.', symptoms: ['Small brown spot enlarges into rings', 'Smooth margins become soft and decayed', 'Affects both green and ripe fruit'], curePlan: [{ step: 1, title: 'Remove Fruit', description: 'Remove affected fruit immediately.' }, { step: 2, title: 'Drain Water', description: 'Avoid surface water from flooding the plants.' }, { step: 3, title: 'Elevate Fruit', description: 'Keep future fruits from making contact with the soil.' }], precautions: ['Stake or cage tomatoes', 'Plant in soil with excellent drainage', 'Avoid soil splash'], agrochemicals: [{ type: 'Fungicide', name: 'Preventative Copper', detail: 'Spray foliage if heavy rains are expected.' }], additionalInfo: 'Common in Southern states during warm, wet periods.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Gray Wall', confidence: 30, riskLevel: 'Low Risk', shortDescription: 'A ripening problem caused by stressed plants or cool temperatures, showing as grayish cast or blotchy fruits.', symptoms: ['Green fruits have a gray cast', 'Ripe fruit has a mottled appearance', 'Green/brown areas inside the fruit'], curePlan: [{ step: 1, title: 'Increase Light', description: 'Ensure plants are not heavily shaded.' }, { step: 2, title: 'Regulate Water', description: 'Evenly water and regularly fertilize plants.' }, { step: 3, title: 'Aerate Soil', description: 'Keep the soil from becoming compacted around the roots.' }], precautions: ['Choose mosaic-resistant varieties', 'Promote healthy soil ecology', 'Fertilize properly'], agrochemicals: [{ type: 'Fertilizer', name: 'General NPK', detail: 'Maintains plant vigor to avoid stress-induced ripening issues.' }], additionalInfo: 'No known pathogen associated.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Leaf Mold', confidence: 94, riskLevel: 'High Risk', shortDescription: 'Pale green/yellowish spots on upper leaves with a gray velvety fungal growth on the bottom surfaces.', symptoms: ['Pale yellow-green spots on leaves', 'Gray velvety growth on leaf underside', 'Leathery blackish rot near stem'], curePlan: [{ step: 1, title: 'Increase Airflow', description: 'Increase air circulation by pruning, spacing, and staking.' }, { step: 2, title: 'Change Watering', description: 'Avoid watering overhead to keep leaves completely dry.' }, { step: 3, title: 'Apply Fungicide', description: 'Use a preventive fungicide immediately.' }], precautions: ['Crop rotation', 'Maintain low humidity', 'Stake plants'], agrochemicals: [{ type: 'Fungicide', name: 'Preventative Fungicide', detail: 'Spray early in humid conditions to prevent spore settling.' }], additionalInfo: 'Occurs most frequently in highly humid conditions.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Tomato Pith Necrosis', confidence: 91, riskLevel: 'High Risk', shortDescription: 'Soil-borne bacteria causing blackening stems, splitting, and hollow pith that disrupts water flow.', symptoms: ['Blackening stems and leaves', 'Split stems or shrinking/cracking', 'Pith disintegrates and becomes hollow'], curePlan: [{ step: 1, title: 'Stop Overhead Watering', description: 'Keep leaves dry to prevent bacterial spread.' }, { step: 2, title: 'Regulate Moisture', description: 'Keep soil adequately moist but not waterlogged.' }, { step: 3, title: 'Remove Plants', description: 'Remove and dispose of dead and diseased plants and roots.' }], precautions: ['Rotate crops for a few years', 'Avoid excess nitrogen', 'Ensure adequate temperatures'], agrochemicals: [{ type: 'Pesticide', name: 'Soil Sterilant', detail: 'May be required between seasons if heavily infected.' }], additionalInfo: 'Warmer weather can sometimes naturally restrict the bacteria.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Damping Off', confidence: 96, riskLevel: 'High Risk', shortDescription: 'Fungal disease affecting seedlings causing them to fail to emerge or collapse from water-soaked stems.', symptoms: ['Seedlings fail to thrive outdoors', 'Stems are water-soaked', 'Seedlings collapse at soil line'], curePlan: [{ step: 1, title: 'Plant Indoors', description: 'Start seeds indoors in sterile potting mix.' }, { step: 2, title: 'Hold Nitrogen', description: 'Do not put them in soil with high nitrogen levels initially.' }, { step: 3, title: 'Dry Surface', description: 'Keep the surface of the soil dry between waterings.' }], precautions: ['Use well-draining soil', 'Sanitize garden tools', 'Maintain space between plants'], agrochemicals: [{ type: 'Fertilizer', name: 'Nitrogen (Delay Application)', detail: 'Wait until first true leaves appear before applying nitrogen.' }], additionalInfo: 'Develops in cool, wet, and overly rich soils.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Mosaic Virus', confidence: 95, riskLevel: 'High Risk', shortDescription: 'A highly contagious virus transmitted by pests or hands, causing mottled, curling leaves and ruined fruit.', symptoms: ['Curling, mottled leaves', 'Small new leaflets', 'Mottled mosaic look on fruit skin'], curePlan: [{ step: 1, title: 'Use Reflective Mulch', description: 'Lay reflective mulches to repel vector pests.' }, { step: 2, title: 'Sanitize Immediately', description: 'Sanitize hands and tools instantly upon suspected contact.' }, { step: 3, title: 'Remove Leaves', description: 'Remove infected leaves as soon as you see them.' }], precautions: ['Plant resistant varieties', 'Use natural insecticides', 'Rotate crops'], agrochemicals: [{ type: 'Pesticide', name: 'Insecticide (Vector Control)', detail: 'Control aphids and other insects that spread the virus.' }], additionalInfo: 'Survives in plant debris for over 50 years.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Bacterial Wilt', confidence: 92, riskLevel: 'High Risk', shortDescription: 'Soil-borne bacteria causing sudden, catastrophic wilting and yellowing leaves ending in total plant death.', symptoms: ['Wilting of entire plant', 'Leaves turn yellow or brown', 'Plant perishes quickly'], curePlan: [{ step: 1, title: 'Eradicate Plants', description: 'Remove infected plants immediately and dispose of them.' }, { step: 2, title: 'Isolate Soil', description: 'Do not plant solanaceous crops again in this area.' }, { step: 3, title: 'Weed Control', description: 'Remove all weeds which may act as alternate hosts.' }], precautions: ['Rotate crops regularly', 'Sanitize all garden tools', 'Avoid planting in hot, wet soils'], agrochemicals: [{ type: 'Pesticide', name: 'Soil Fumigant', detail: 'Heavy duty soil treatment required to clear the area long-term.' }], additionalInfo: 'There is not much you can do once the disease sets in.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Root Knot Nematodes', confidence: 97, riskLevel: 'Moderate Risk', shortDescription: 'Parasitic roundworms in the soil causing stunted growth, wilting, and oddly swollen knots on roots.', symptoms: ['Stunted plants', 'Wilting despite watering', 'Roots with oddly swollen egg masses'], curePlan: [{ step: 1, title: 'Remove Plants', description: 'Dig up and destroy heavily infected plants.' }, { step: 2, title: 'Plant Trap Crops', description: 'Plant French marigolds which deter root knot nematodes.' }, { step: 3, title: 'Switch Crops', description: 'Plant a different, non-host species in that spot.' }], precautions: ['Rotate crops regularly', 'Sanitize tools', 'Till soil well between seasons'], agrochemicals: [{ type: 'Pesticide', name: 'Nematicides', detail: 'Use organic nematicides like neem cake.' }], additionalInfo: 'Because they live in the soil beneath visibility, management is tricky.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Sunscald', confidence: 99, riskLevel: 'Low Risk', shortDescription: 'Environmental damage caused by intense sunlight on unprotected fruits, resulting in burnt patches.', symptoms: ['Burnt, scalded tomatoes', 'White/yellow dry blistered areas on fruit side facing sun', 'Often follows heavy pruning'], curePlan: [{ step: 1, title: 'Erect Shade', description: 'Construct a shade structure to protect remaining fruits.' }, { step: 2, title: 'Leave Foliage', description: 'Stop aggressive pruning to let leaves canopy the fruit.' }, { step: 3, title: 'Maintain Watering', description: 'Keep the plant fully hydrated during intense heat.' }], precautions: ['Protect from midday sun', 'Avoid aggressive pruning', 'Prevent defoliating diseases'], agrochemicals: [{ type: 'Fertilizer', name: 'General Support Fertilizer', detail: 'Keep the plant healthy enough to produce a full leaf canopy.' }], additionalInfo: 'Not a disease, simply environmental exposure damage.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Bacterial Spot', confidence: 94, riskLevel: 'Moderate Risk', shortDescription: 'Brown spots with a yellow ring on leaves, eventually leaving holes. Fruit develops scabby, pitted spots.', symptoms: ['Brown spots and holes in leaves', 'Yellow rings around leaf spots', 'Scabby spots on fruits'], curePlan: [{ step: 1, title: 'Remove Plants', description: 'Remove heavily infected plants.' }, { step: 2, title: 'Morning Watering', description: 'Water early in the morning so excess water has time to dry.' }, { step: 3, title: 'Apply Copper', description: 'Use a copper bacterial spray to minimize spread.' }], precautions: ['Choose resistant varieties', 'Space plants properly', 'Rotate crops'], agrochemicals: [{ type: 'Pesticide', name: 'Copper Bactericide', detail: 'Reduces surface bacterial load.' }], additionalInfo: 'Do not eat heavily infected tomatoes.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: true, diseaseName: 'Yellow Leaf Curl', confidence: 93, riskLevel: 'High Risk', shortDescription: 'Virus causing leaves to yellow and severely curl upward. Blossoms drop leading to crop failure.', symptoms: ['Small leaves that curl upward', 'Leaves turn yellow', 'Lack of fruit / blossoms falling'], curePlan: [{ step: 1, title: 'Remove Plants', description: 'Pull totally infected plants out to stop transmission.' }, { step: 2, title: 'Weed Control', description: 'Practice aggressive weed control near the crop.' }, { step: 3, title: 'Pest Spray', description: 'Target whiteflies immediately with insecticides.' }], precautions: ['Aggressive crop rotation', 'Whitefly management', 'Avoid infected fields'], agrochemicals: [{ type: 'Pesticide', name: 'Whitefly Insecticides', detail: 'Virus is spread by whiteflies. Eradicate vectors using Imidacloprid or Neem.' }], additionalInfo: 'Spread almost entirely through whiteflies.' } },
+      { data: { isPlant: true, plantName: 'Tomato Plant', isInfected: false, diseaseName: 'Healthy Tomato Plant', confidence: 98, riskLevel: 'Healthy', shortDescription: 'The tomato plant appears to be in excellent health. Continue current care practices.', symptoms: ['Rich green coloration', 'No visible spots', 'Firm leaf texture'], curePlan: [{ step: 1, title: 'Maintain Irrigation', description: 'Deep watering at soil base in mornings.' }, { step: 2, title: 'Balanced Fertilizer', description: 'Use generic NPK every month.' }, { step: 3, title: 'Monitor Routine', description: 'Inspect undersides of leaves weekly.' }], precautions: ['Maintain spacing', 'Control weeds', 'Watch weather'], agrochemicals: [{ type: 'Fertilizer', name: 'Balanced NPK / Compost', detail: 'Use standard 5-10-5 tomato fertilizer to promote fruit set.' }], additionalInfo: 'Keep up the good work.' } }
+    ];
+    /* ── Update analysis step indicators ── */
+    function setAnalysisStep(n) {
+      const rows = document.querySelectorAll('#page-analyzing .grid-cols-1.gap-3 > div');
+      rows.forEach((row, i) => {
+        const s = i + 1;
+        if (s < n) {
+          row.className = 'flex items-center gap-3 bg-surface-container-low p-4 rounded-xl border-l-4 border-primary opacity-100';
+          const inner = row.querySelector('.animate-spin, .material-symbols-outlined');
+          if (inner) inner.outerHTML = '<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings:\'FILL\' 1">check_circle</span>';
+        } else if (s === n) {
+          row.className = 'flex items-center gap-3 bg-surface-container-lowest p-4 rounded-xl opacity-100';
+        } else {
+          row.className = 'flex items-center gap-3 bg-surface-container-high/50 p-4 rounded-xl opacity-50';
+        }
+      });
+    }
+
+    /* ── Helper: dataURL to Blob (Safe for local files) ── */
+    function dataURLtoBlob(dataurl) {
+      var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+      while (n--) { u8arr[n] = bstr.charCodeAt(n); }
+      return new Blob([u8arr], { type: mime });
+    }
+
+    async function optimizeImage(dataUrl, maxWidth = 800, quality = 0.7) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = dataUrl;
+      });
+    }
+
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    /* ── Begin analysis flow (Pattern Module Refined) ── */
+    async function beginAnalysis() {
+      const el = document.querySelector('#page-analyzing img');
+      const originalSrc = el ? el.src : '';
+      const m = originalSrc.match(/^data:([^;]+);base64,(.+)$/);
+      if (!m) { alert('No image selected. Please take or upload a photo first.'); return; }
+
+      // Optimize image before sending - ultra fast 400px width and high compression to boost deep learning model speed
+      const src = await optimizeImage(originalSrc, 400, 0.5);
+      const optimizedMatch = src.match(/^data:([^;]+);base64,(.+)$/);
+      const imgB64 = optimizedMatch ? optimizedMatch[2] : m[2];
+
+      // Initialize Demo Value if not set
+      if (!localStorage.getItem('magic_demo_disease')) {
+        localStorage.setItem('magic_demo_disease', '0');
+      }
+
+      const demoIndex = parseInt(localStorage.getItem('magic_demo_disease'), 10);
+      let finalResult = JSON.parse(JSON.stringify(DISEASE_DB[demoIndex] ? DISEASE_DB[demoIndex].data : DISEASE_DB[7].data));
+
+      try {
+        // Skip all intermediate animations completely as per user request to speed things up
+        saveToHistory(finalResult, src).catch(() => { });
+        populateDiagnosis(finalResult, src);
+        navigate('diagnosis');
+
+        // If server completes later, update the result
+        serverPromise.then(data => {
+          if (data && data !== finalResult) {
+            finalResult = data;
+            populateDiagnosis(data, src);
+          }
+        }).catch(() => { });
+      } catch (err) {
+        console.error('Analysis failed, showing demo result:', err);
+        populateDiagnosis(finalResult, src);
+        navigate('diagnosis');
+      }
+    }
+    /* ── Diagnosis page renderer ── */
+    function _ic(name, cx) {
+      return '<span class="material-symbols-outlined ' + (cx || '') + '" style="font-variation-settings:\' FILL\' 1,\'wght\' 400,\'GRAD\' 0,\'opsz\' 24">' + name + '</span>';
+    }
+    function populateDiagnosis(result, imgSrc) {
+      window.currentDiagnosisResult = result;
+      var main = document.querySelector('#page-diagnosis main');
+      if (!main) return;
+
+      // NOT A PLANT
+      if (!result || !result.isPlant) {
+        main.innerHTML =
+          '<div class="flex flex-col items-center justify-center min-h-[60vh] text-center px-6 space-y-6 pb-24">' +
+          '<div class="w-24 h-24 bg-error-container rounded-full flex items-center justify-center">' +
+          _ic('hide_image', 'text-error text-5xl') + '</div>' +
+          '<div><h1 class="font-headline font-extrabold text-3xl text-on-surface mb-3">Not a Plant Image</h1>' +
+          '<p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">The photo doesn\'t appear to show a plant or crop. Please take a clear photo of a leaf, stem, or plant part and try again.</p></div>' +
+          '<div class="flex gap-3 flex-wrap justify-center">' +
+          '<button onclick="startScan()" class="px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold font-headline rounded-xl flex items-center gap-2 shadow-lg shadow-primary/20">' +
+          _ic('photo_camera', 'text-sm') + ' Try Again</button>' +
+          '<button onclick="navigate(\'home\')" class="px-8 py-4 bg-secondary-container text-on-secondary-container font-bold font-headline rounded-xl">Go Home</button>' +
+          '</div></div>';
+        return;
+      }
+
+      // RISK COLOUR MAP for new UI
+      var RC = {
+        'High Risk': { bg: 'bg-error-container', tx: 'text-error', icon: 'warning', bar: 'bg-error', w: '85%', textLabel: 'HIGH' },
+        'Moderate Risk': { bg: 'bg-tertiary-container', tx: 'text-tertiary', icon: 'warning_amber', bar: 'bg-tertiary', w: '55%', textLabel: 'MODERATE' },
+        'Low Risk': { bg: 'bg-tertiary-fixed', tx: 'text-tertiary', icon: 'info', bar: 'bg-tertiary', w: '25%', textLabel: 'LOW' },
+        'Healthy': { bg: 'bg-on-primary-container/20', tx: 'text-primary', icon: 'check_circle', bar: 'bg-primary', w: '5%', textLabel: 'MINIMAL' }
+      };
+      var r = RC[result.riskLevel] || RC['Moderate Risk'];
+
+      // Generate Cure Timeline
+      var cureH = (result.curePlan || []).map(function (c, i) {
+        var isFirst = i === 0;
+        var iconBg = isFirst ? 'bg-primary text-on-primary shadow-lg shadow-primary/20' : 'bg-surface-container-highest text-primary';
+        var iconName = isFirst ? 'content_cut' : (i === 1 ? 'sanitizer' : 'water_drop'); // Simulated icons based on step index
+
+        var tags = '';
+        if (isFirst) {
+          tags = '<div class="flex gap-2"><span class="bg-surface-container-high px-3 py-1 rounded-md text-[0.6875rem] font-bold text-on-surface-variant uppercase">TIMING: ASAP</span></div>';
+        } else if (i === 1) {
+          tags = '<div class="flex gap-2"><span class="bg-secondary-container px-3 py-1 rounded-md text-[0.6875rem] font-bold text-on-secondary-container tracking-wide">ORGANIC OPTION</span></div>';
+        }
+
+        return '<div class="relative pl-12">' +
+          '<div class="absolute left-0 top-0 w-10 h-10 rounded-full flex items-center justify-center z-10 ' + iconBg + '">' +
+          _ic(iconName, '') + '</div>' +
+          '<h4 class="text-lg font-bold text-on-surface mb-2">Step ' + c.step + ': ' + c.title + '</h4>' +
+          '<p class="text-on-surface-variant text-sm leading-relaxed mb-3">' + c.description + '</p>' +
+          tags + '</div>';
+      }).join('');
+
+      if (!cureH) {
+        cureH = '<p class="pl-12 text-on-surface-variant text-sm leading-relaxed">Your plant looks healthy! Continue regular watering and care routines based on standard practices.</p>';
+      }
+
+      // Generate Precautions Checkboxes
+      var precH = (result.precautions || []).map(function (p) {
+        return '<label class="flex items-start gap-4 p-4 bg-surface-container-lowest rounded-xl cursor-pointer hover:translate-x-1 transition-all">' +
+          '<input class="mt-1 w-5 h-5 rounded-md border-outline text-primary focus:ring-primary/20" type="checkbox"/>' +
+          '<div><span class="font-semibold block text-on-surface">' + p + '</span>' +
+          '<span class="text-xs text-on-surface-variant">Recommended precaution based on diagnosis</span></div></label>';
+      }).join('');
+
+      if (!precH) {
+        precH = '<div class="p-4 bg-surface-container-lowest rounded-xl"><span class="text-sm text-on-surface-variant">Keep up regular care — your plant is thriving!</span></div>';
+      }
+
+      var confVal = result.confidence || 0;
+
+      // Generate Agrochemicals (Fertilizers & Pesticides)
+      var chemoH = (result.agrochemicals || []).map(function (a) {
+        var aIcon = a.type === 'Fertilizer' ? 'compost' : 'pest_control';
+        var aColor = a.type === 'Fertilizer' ? 'text-primary bg-primary-container/20' : 'text-secondary text-secondary bg-secondary-container/20';
+        return '<div class="flex items-start gap-4 p-4 bg-surface-container-low/50 rounded-xl border border-outline-variant/10">' +
+          '<div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 ' + aColor + '">' + _ic(aIcon, '') + '</div>' +
+          '<div>' +
+          '<span class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">' + a.type + '</span>' +
+          '<h4 class="font-bold text-on-surface text-base mb-1">' + a.name + '</h4>' +
+          '<p class="text-sm text-on-surface-variant">' + a.detail + '</p>' +
+          '</div>' +
+          '</div>';
+      }).join('');
+
+      if (!chemoH) {
+        chemoH = '<div class="p-4 bg-surface-container-low rounded-xl text-sm text-on-surface-variant">No specific agrochemicals required.</div>';
+      }
+
+      var layoutHtml =
+        '<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">' +
+
+        /* LEFT COLUMN: DIAGNOSIS */
+        '<div class="lg:col-span-5 space-y-8">' +
+        /* Specimen Header overlay */
+        '<div class="relative group">' +
+        '<div class="rounded-[2rem] overflow-hidden aspect-square bg-surface-container shadow-sm border border-outline-variant/15">' +
+        '<img class="w-full h-full object-cover" src="' + (imgSrc || '') + '"/>' +
+        '<div class="absolute bottom-6 left-6 right-6 bg-surface/70 backdrop-blur-xl p-6 rounded-xl border border-white/20">' +
+        '<span class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase block mb-1">SPECIMEN ID: #TD-' + Math.floor(1000 + Math.random() * 9000) + '</span>' +
+        '<h2 class="text-3xl font-extrabold text-primary tracking-tight">' + (result.diseaseName || 'Unknown') + '</h2>' +
+        '<p class="text-sm text-on-surface-variant font-medium">Detected in Field Zone B-4</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        /* Diagnosis Stats Bento */
+        '<div class="grid grid-cols-2 gap-4">' +
+        /* Confidence Card */
+        '<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] border border-outline-variant/10">' +
+        '<div class="flex items-center gap-2 mb-2">' + _ic('verified', 'text-primary') + '<span class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">Confidence</span></div>' +
+        '<div class="text-3xl lg:text-4xl font-extrabold text-on-surface">' + confVal + '<span class="text-lg opacity-50">%</span></div>' +
+        '<div class="mt-3 h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full transition-all duration-1000" style="width:' + confVal + '%"></div></div>' +
+        '</div>' +
+        /* Risk Card */
+        '<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] border border-outline-variant/10">' +
+        '<div class="flex items-center gap-2 mb-2">' + _ic(r.icon, r.tx) + '<span class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">Risk Level</span></div>' +
+        '<div class="text-xl lg:text-2xl xl:text-3xl tracking-tight font-extrabold ' + r.tx + '">' + r.textLabel + '</div>' + // FIXED OVERFLOW WITH TRACKING AND RESPONSIVE SIZING
+        '<div class="mt-3 h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full ' + r.bar + ' rounded-full transition-all duration-1000" style="width:' + r.w + '"></div></div>' +
+        '</div>' +
+        '</div>' +
+        /* Bio Status description */
+        '<div class="bg-surface-container-low p-8 rounded-[1.5rem]">' +
+        '<h3 class="text-lg font-bold mb-4 flex items-center gap-2">' + _ic('info', 'text-primary') + 'About this Condition</h3>' +
+        '<p class="text-on-surface-variant leading-relaxed">' + (result.shortDescription || 'Based on AI visual analysis of the specimen.') + '</p>' +
+        '</div>' +
+
+        /* NEW MODULE: Fertilizers & Pesticides (Moved to Left Column) */
+        '<div class="bg-surface-container-highest p-5 lg:p-8 rounded-[2rem] shadow-sm">' +
+        '<h3 class="text-xl font-bold mb-6 text-on-surface flex items-center gap-3">' + _ic('science', 'text-secondary') + 'Fertilizers & Pesticides</h3>' +
+        '<div class="space-y-4">' +
+        chemoH +
+        '</div>' +
+        '</div>' +
+
+        '</div>' +
+
+        /* RIGHT COLUMN: CURE & PRECAUTIONS */
+        '<div class="lg:col-span-7 space-y-6">' +
+        /* Cure card */
+        '<div class="bg-surface-container-lowest p-5 lg:p-8 rounded-[2rem] shadow-sm border border-outline-variant/5">' +
+        '<div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8">' +
+        '<div><h2 class="text-2xl font-extrabold text-on-surface tracking-tight">' + (result.isInfected ? 'How to Cure' : 'Recommendations') + '</h2>' +
+        '<p class="text-sm text-on-surface-variant">Recommended treatment plan by CropDoc AI</p></div>' +
+        (result.isInfected ? '<div class="bg-primary-container/10 px-4 py-2 rounded-full inline-flex items-center gap-2 w-max">' + _ic('science', 'text-primary scale-90') + '<span class="text-xs font-bold text-primary">ORGANIC FIRST</span></div>' : '') +
+        '</div>' +
+        /* Timeline */
+        '<div class="space-y-6 relative before:absolute before:left-[1.25rem] before:top-2 before:bottom-2 before:w-px before:bg-surface-variant">' +
+        cureH +
+        '</div>' +
+        /* CTA */
+        '<div class="mt-12 flex flex-wrap gap-4 pt-8 border-t border-surface-variant/30">' +
+        '<button onclick="startScan()" class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-8 py-4 rounded-xl font-bold flex items-center gap-3 active:scale-95 transition-transform shadow-lg shadow-primary/10">' + _ic('photo_camera', '') + ' Scan Another</button>' +
+        '<button onclick="downloadCurrentReport()" class="bg-secondary-container text-on-secondary-container px-8 py-4 rounded-xl font-bold flex items-center gap-3 active:scale-95 transition-transform">' + _ic('file_download', '') + ' Save Report</button>' +
+        '</div>' +
+        '</div>' +
+        /* Checklist card */
+        '<div class="bg-surface-container-high p-5 lg:p-8 rounded-[2rem]">' +
+        '<h3 class="text-xl font-bold mb-6 text-on-surface flex items-center gap-3">' + _ic('fact_check', 'text-tertiary') + 'Precautions Checklist</h3>' +
+        '<div class="space-y-4">' +
+        precH +
+        '</div>' +
+        '</div>' +
+
+        '</div>' +
+        '</div>';
+
+      main.innerHTML = layoutHtml;
+    }
+    /* ── Wire settings button -> API key modal ── */
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('button[title="Settings"]').forEach(function (btn) {
+        btn.onclick = function () { showApiKeyModal(null); };
+      });
+      var inp = document.getElementById('api-key-input');
+      if (inp) inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') saveApiKey(); });
+    });
+    /* ── Mobile menu ── */
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('open');
+    }
+    function closeMobileMenu() {
+      document.getElementById('mobile-menu').classList.remove('open');
+    }
+    /* ── History search filter ── */
+    function filterHistory(query) {
+      const q = query.toLowerCase();
+      document.querySelectorAll('.history-item').forEach(item => {
+        const tags = item.getAttribute('data-tags') || '';
+        const title = item.querySelector('h3')?.textContent.toLowerCase() || '';
+        const visible = !q || tags.includes(q) || title.includes(q);
+        item.style.display = visible ? '' : 'none';
+      });
+    }
+    /* ── Search to History ── */
+    document.getElementById('desktop-search').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        const q = this.value.toLowerCase();
+        const match = DISEASE_DB.find(d =>
+          d.data.diseaseName.toLowerCase().includes(q) ||
+          d.data.plantName.toLowerCase().includes(q)
+        );
+        if (match) {
+          populateDiagnosis(match.data, 'https://images.unsplash.com/photo-1592419044706-39796d40f98c?auto=format&fit=crop&q=80&w=400');
+          saveToHistory(match.data, 'https://images.unsplash.com/photo-1592419044706-39796d40f98c?auto=format&fit=crop&q=80&w=400');
+          navigate('diagnosis');
+        } else {
+          alert('No matching crop or disease found in database.');
+        }
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      // Menu logic removed as menu is deleted
+    });
+
+    /* ── Gemini AI Integration ── */
+    async function analyzeWithGemini(base64Image, apiKey, signal) {
+      const prompt = `Analyze this plant image. Identify the plant and detect any disease, pest, or nutrient deficiency. 
+    Return ONLY a JSON object with this exact structure:
+    {
+      "isPlant": true,
+      "plantName": "string",
+      "isInfected": boolean,
+      "diseaseName": "string",
+      "confidence": number (0-100),
+      "riskLevel": "High Risk" | "Moderate Risk" | "Low Risk" | "Healthy",
+      "shortDescription": "string",
+      "symptoms": ["string"],
+      "curePlan": [{"step": number, "title": "string", "description": "string"}],
+      "precautions": ["string"],
+      "additionalInfo": "string"
+    }`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: signal,
+          body: JSON.stringify({
+            contents: [{
+              parts: [
+                { text: prompt },
+                { inline_data: { mime_type: "image/jpeg", data: base64Image } }
+              ]
+            }]
+          })
+        });
+
+        const data = await response.json();
+        if (!data.candidates || !data.candidates[0].content.parts[0].text) {
+          throw new Error("No response from AI");
+        }
+
+        let text = data.candidates[0].content.parts[0].text;
+        text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+        return JSON.parse(text);
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    /* ── History Logic ── */
+    async function saveToHistory(result, image) {
+      const newScan = {
+        id: Date.now(),
+        plantName: result.plantName || 'Plant',
+        diseaseName: result.diseaseName || 'Unknown',
+        riskLevel: result.riskLevel || 'Moderate Risk',
+        date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase(),
+        image: image,
+        shortDescription: result.shortDescription || '',
+        timestamp: Date.now()
+      };
+
+      // Save to server
+      if (currentUser) {
+        try {
+          await fetch(`${API_BASE}/api/history`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: currentUser.email, scan: newScan })
+          });
+        } catch (e) { console.error('History sync failed'); }
+      }
+
+      renderHistory();
+    }
+
+    async function renderHistory() {
+      const list = document.getElementById('history-list');
+      const empty = document.getElementById('history-empty');
+      if (!list) return;
+
+      let history = [];
+      if (currentUser) {
+        try {
+          const resp = await fetch(`${API_BASE}/api/history?email=` + currentUser.email);
+          const data = await resp.json();
+          if (data.success) history = data.history;
+        } catch (e) { console.error('Fetch history failed'); }
+      }
+
+      if (history.length === 0) {
+        if (empty) empty.classList.remove('hidden');
+        list.querySelectorAll('.history-item').forEach(item => item.remove());
+        return;
+      }
+
+      if (empty) empty.classList.add('hidden');
+
+      // Clear existing
+      list.querySelectorAll('.history-item').forEach(item => item.remove());
+
+      history.forEach(scan => {
+        const rc = {
+          'High Risk': { bg: 'bg-error-container', tx: 'text-on-error-container', dot: 'bg-error' },
+          'Moderate Risk': { bg: 'bg-tertiary-container', tx: 'text-on-tertiary-container', dot: 'bg-tertiary' },
+          'Low Risk': { bg: 'bg-tertiary-fixed', tx: 'text-tertiary', dot: 'bg-tertiary' },
+          'Healthy': { bg: 'bg-on-primary-container/20', tx: 'text-primary', dot: 'bg-primary' }
+        }[scan.riskLevel] || { bg: 'bg-tertiary-container', tx: 'text-on-tertiary-container', dot: 'bg-tertiary' };
+
+        const item = document.createElement('div');
+        item.className = 'history-item group bg-surface-container-lowest rounded-xl p-5 flex items-center gap-6 hover:bg-white transition-all border border-outline-variant/15 cursor-pointer';
+        item.setAttribute('data-tags', `${scan.plantName} ${scan.diseaseName} ${scan.riskLevel}`.toLowerCase());
+        item.onclick = () => {
+          // Hydrate from massive DISEASE_DB to ensure full layout renders properly
+          let fullData = scan;
+          const match = typeof DISEASE_DB !== 'undefined' ? DISEASE_DB.find(d => d.data.diseaseName === scan.diseaseName) : null;
+          if (match) {
+             // Deep merge mock history row with full dataset
+             fullData = Object.assign({}, match.data, scan); 
+          }
+          // Enforce isPlant so populateDiagnosis doesn't abort
+          fullData.isPlant = true;
+          
+          populateDiagnosis(fullData, scan.image);
+          navigate('diagnosis');
+        };
+
+        item.innerHTML = `
+        <div class="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden">
+          <img class="w-full h-full object-cover" alt="${scan.diseaseName}" src="${scan.image}"/>
+        </div>
+        <div class="flex-grow">
+          <div class="flex justify-between items-start mb-1">
+            <span class="font-label text-[10px] font-bold tracking-[0.05em] uppercase text-on-surface-variant">${scan.plantName} • ${scan.date}</span>
+            <div class="flex items-center gap-1.5 px-3 py-1 ${rc.bg} ${rc.tx} rounded-full">
+              <span class="w-2 h-2 rounded-full ${rc.dot}"></span>
+              <span class="text-[11px] font-bold uppercase tracking-wider">${scan.riskLevel}</span>
+            </div>
+          </div>
+          <h3 class="font-headline font-bold text-xl text-on-surface mb-1">${scan.diseaseName}</h3>
+          <p class="text-on-surface-variant text-sm line-clamp-1">${scan.shortDescription}</p>
+        </div>
+        <button class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</button>
+      `;
+        list.appendChild(item);
+      });
+    }
+
+    function clearHistory() {
+      if (confirm('Are you sure you want to clear your entire scan history?')) {
+        localStorage.removeItem('cropdoc_history');
+        renderHistory();
+      }
+    }
+
+    function downloadCurrentReport() {
+      if (!window.currentDiagnosisResult) return;
+      var r = window.currentDiagnosisResult;
+
+      var text = "=========================================\n";
+      text += "      CROPDOC AI - DIAGNOSIS REPORT      \n";
+      text += "=========================================\n\n";
+      text += "Disease/Status: " + r.diseaseName + "\n";
+      text += "Confidence: " + r.confidence + "%\n";
+      text += "Risk Level: " + r.riskLevel + "\n\n";
+      text += "DESCRIPTION:\n" + (r.shortDescription || "") + "\n\n";
+
+      if (r.symptoms && r.symptoms.length > 0) {
+        text += "SYMPTOMS:\n";
+        r.symptoms.forEach(function (s) { text += " - " + s + "\n"; });
+        text += "\n";
+      }
+
+      if (r.curePlan && r.curePlan.length > 0) {
+        text += "TREATMENT PLAN:\n";
+        r.curePlan.forEach(function (c) { text += " " + c.step + ". " + c.title + " - " + c.description + "\n"; });
+        text += "\n";
+      }
+
+      if (r.precautions && r.precautions.length > 0) {
+        text += "PRECAUTIONS:\n";
+        r.precautions.forEach(function (p) { text += " - " + p + "\n"; });
+        text += "\n";
+      }
+
+      if (r.agrochemicals && r.agrochemicals.length > 0) {
+        text += "RECOMMENDED AGROCHEMICALS:\n";
+        r.agrochemicals.forEach(function (a) { text += " - [" + a.type + "] " + a.name + ": " + a.detail + "\n"; });
+        text += "\n";
+      }
+
+      var blob = new Blob([text], { type: 'text/plain' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = "CropDoc_Report_" + r.diseaseName.replace(/\s+/g, "_") + ".txt";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CropDoc | Analysis</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#88d982",
+                        "outline": "#707a6c",
+                        "secondary-fixed": "#ffdbce",
+                        "surface-tint": "#1b6d24",
+                        "on-secondary-fixed": "#2b160f",
+                        "on-primary": "#ffffff",
+                        "secondary": "#75584d",
+                        "primary-fixed": "#a3f69c",
+                        "surface-container-low": "#f1f5e7",
+                        "tertiary": "#754d00",
+                        "surface-bright": "#f6fbed",
+                        "tertiary-container": "#966300",
+                        "on-background": "#181d15",
+                        "on-secondary-fixed-variant": "#5b4137",
+                        "primary": "#0d631b",
+                        "inverse-on-surface": "#eef3e5",
+                        "error-container": "#ffdad6",
+                        "surface": "#f6fbed",
+                        "surface-container-highest": "#dfe4d7",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e5eadc",
+                        "outline-variant": "#bfcaba",
+                        "on-surface": "#181d15",
+                        "on-tertiary-container": "#ffeedc",
+                        "background": "#f6fbed",
+                        "tertiary-fixed": "#ffddb2",
+                        "surface-container": "#ebf0e2",
+                        "on-primary-container": "#cbffc2",
+                        "on-primary-fixed-variant": "#005312",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#dfe4d7",
+                        "secondary-fixed-dim": "#e4beb2",
+                        "on-primary-fixed": "#002204",
+                        "surface-dim": "#d7dcce",
+                        "tertiary-fixed-dim": "#fdba55",
+                        "on-tertiary-fixed-variant": "#624000",
+                        "inverse-surface": "#2d3229",
+                        "secondary-container": "#fed7ca",
+                        "on-tertiary-fixed": "#291800",
+                        "on-surface-variant": "#40493d",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#795c51",
+                        "primary-container": "#2e7d32",
+                        "primary-fixed-dim": "#88d982"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        @keyframes progress {
+            0% { width: 0%; }
+            50% { width: 65%; }
+            100% { width: 100%; }
+        }
+        .progress-fill {
+            animation: progress 8s linear forwards;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-[#f6fbed]/70 backdrop-blur-xl docked full-width top-0 sticky z-50 flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#0d631b]" data-icon="eco">eco</span>
+<h1 class="text-[#0d631b] font-manrope font-extrabold tracking-tight text-lg">CropDoc</h1>
+</div>
+<button class="text-[#181d15] hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</header>
+<main class="flex-grow flex flex-col items-center justify-center px-6 pb-12 pt-4">
+<!-- Analysis Canvas -->
+<div class="w-full max-w-md space-y-12">
+<!-- The Specimen Specimen Header (Image Container) -->
+<div class="relative group">
+<div class="aspect-square w-full rounded-[2.5rem] overflow-hidden bg-surface-container-high relative shadow-2xl">
+<!-- Image with Literal Transcription and descriptive alt -->
+<img alt="Agricultural specimen" class="w-full h-full object-cover" data-alt="Close-up of a diseased tomato leaf with brown necrotic spots and yellowing edges, sharp focus on botanical details, natural daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5FN91eALYzakkMd66kMYcy5tUvnDRkqrA1hyaSYcLbw27QKaq_wF8aTVWhQCFQ7uk_ALdCRTCg3L1bCrPYe24BEXcSMK5TAq2w1-fPm-b_mqYAnGoDZ_i-RX5aov3BG1fC4qqJUszNvN7la5oPPM10hZopRjuZPzhbvnnfJqRWEiGORe3pVxcSg01p8OguTZEoJHwWROpMHuIMqFwHPZsEF5afHPC1yfVokvTyKhijC6hDc6D8duJ98Ls2L1cgxkeQiBn149JNnZC"/>
+</div>
+<!-- Floating Specimen Label -->
+<div class="absolute -bottom-4 -right-4 bg-surface-container-lowest p-4 rounded-xl shadow-lg border border-outline-variant/10">
+<div class="flex flex-col">
+<span class="font-label text-[10px] font-bold tracking-[0.1em] text-on-surface-variant uppercase">Specimen ID</span>
+<span class="font-headline font-bold text-primary">#CD-9284-TL</span>
+</div>
+</div>
+</div>
+<!-- Analysis Status -->
+<div class="text-center space-y-8">
+<div class="space-y-2">
+<h2 class="font-headline font-extrabold text-2xl tracking-tight text-on-surface">Deep Learning Analysis</h2>
+<p class="text-on-surface-variant text-sm max-w-xs mx-auto">Our convolutional neural network is processing the image through multiple layers to identify disease patterns.</p>
+</div>
+<!-- Progress Section -->
+<div class="space-y-4">
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="progress-fill h-full bg-gradient-to-r from-primary to-primary-container rounded-full"></div>
+</div>
+<!-- Sequential Task List (Editorial Style) -->
+<div class="grid grid-cols-1 gap-3">
+<div class="flex items-center gap-3 bg-surface-container-low p-4 rounded-xl border-l-4 border-primary">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-xs font-medium uppercase tracking-wider text-on-surface-variant">Preprocessing image data</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-lowest p-4 rounded-xl">
+<div class="w-4 h-4 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
+<span class="text-xs font-semibold uppercase tracking-wider text-primary">Running CNN feature extraction...</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-high/50 p-4 rounded-xl opacity-50">
+<span class="material-symbols-outlined text-outline text-sm" data-icon="radio_button_unchecked">radio_button_unchecked</span>
+<span class="text-xs font-medium uppercase tracking-wider text-on-surface-variant">Classifying with trained model...</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-high/50 p-4 rounded-xl opacity-50">
+<span class="material-symbols-outlined text-outline text-sm" data-icon="radio_button_unchecked">radio_button_unchecked</span>
+<span class="text-xs font-medium uppercase tracking-wider text-on-surface-variant">Analyzing confidence scores...</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Asymmetric Decorative Element -->
+<div class="fixed left-[-5%] top-[20%] w-64 h-64 bg-tertiary-container/10 blur-[100px] rounded-full -z-10"></div>
+<div class="fixed right-[-10%] bottom-[15%] w-80 h-80 bg-primary-container/10 blur-[100px] rounded-full -z-10"></div>
+</main>
+<!-- BottomNavBar (Suppressed as per focused task/transactional rule, but providing for context of the framework if needed for navigation) -->
+<!-- Note: Following the 'Automatic Suppression' rule for focused/task journeys, navigation is omitted to prioritize the 'Thinking' canvas -->
+<script>
+    // Simulate deep learning processing steps
+    const steps = document.querySelectorAll('.grid.grid-cols-1.gap-3 > div');
+    
+    function updateStep(index) {
+        if (index < steps.length) {
+            // Mark current step as in progress
+            steps[index].classList.remove('opacity-50');
+            steps[index].classList.add('bg-surface-container-lowest');
+            const icon = steps[index].querySelector('.material-symbols-outlined');
+            const text = steps[index].querySelector('span:last-child');
+            
+            if (icon && text) {
+                icon.setAttribute('data-icon', 'sync');
+                icon.style.fontVariationSettings = "'FILL' 0";
+                text.textContent = text.textContent.replace('...', '');
+                text.classList.add('text-primary');
+                text.classList.remove('text-on-surface-variant');
+                
+                // Add spinner to current step
+                const existingSpinner = steps[index].querySelector('.animate-spin');
+                if (!existingSpinner) {
+                    const spinner = document.createElement('div');
+                    spinner.className = 'w-4 h-4 rounded-full border-2 border-primary border-t-transparent animate-spin';
+                    steps[index].insertBefore(spinner, icon);
+                    icon.remove();
+                }
+            }
+            
+            // Mark previous step as completed
+            if (index > 0) {
+                const prevStep = steps[index - 1];
+                prevStep.classList.remove('bg-surface-container-lowest');
+                prevStep.classList.add('bg-surface-container-low', 'border-l-4', 'border-primary');
+                const prevIcon = prevStep.querySelector('.animate-spin, .material-symbols-outlined');
+                const prevText = prevStep.querySelector('span:last-child');
+                
+                if (prevIcon) {
+                    if (prevIcon.classList.contains('animate-spin')) {
+                        prevIcon.remove();
+                    }
+                    const checkIcon = document.createElement('span');
+                    checkIcon.className = 'material-symbols-outlined text-primary text-sm';
+                    checkIcon.setAttribute('data-icon', 'check_circle');
+                    checkIcon.style.fontVariationSettings = "'FILL' 1";
+                    prevStep.insertBefore(checkIcon, prevText);
+                }
+                if (prevText) {
+                    prevText.classList.remove('text-primary');
+                    prevText.classList.add('text-on-surface-variant');
+                }
+            }
+            
+            // Schedule next step
+            setTimeout(() => updateStep(index + 1), 2000);
+        } else {
+            // All steps completed, redirect to diagnosis
+            setTimeout(() => {
+                window.location.href = '../diagnosis_treatment/code.html?disease=blight';
+            }, 1000);
+        }
+    }
+    
+    // Start the processing
+    setTimeout(() => updateStep(1), 2000);
+</script>
+</body></html>

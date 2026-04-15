@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CropDoc - Professional Crop Health</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#88d982",
+                        "outline": "#707a6c",
+                        "secondary-fixed": "#ffdbce",
+                        "surface-tint": "#1b6d24",
+                        "on-secondary-fixed": "#2b160f",
+                        "on-primary": "#ffffff",
+                        "secondary": "#75584d",
+                        "primary-fixed": "#a3f69c",
+                        "surface-container-low": "#f1f5e7",
+                        "tertiary": "#754d00",
+                        "surface-bright": "#f6fbed",
+                        "tertiary-container": "#966300",
+                        "on-background": "#181d15",
+                        "on-secondary-fixed-variant": "#5b4137",
+                        "primary": "#0d631b",
+                        "inverse-on-surface": "#eef3e5",
+                        "error-container": "#ffdad6",
+                        "surface": "#f6fbed",
+                        "surface-container-highest": "#dfe4d7",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e5eadc",
+                        "outline-variant": "#bfcaba",
+                        "on-surface": "#181d15",
+                        "on-tertiary-container": "#ffeedc",
+                        "background": "#f6fbed",
+                        "tertiary-fixed": "#ffddb2",
+                        "surface-container": "#ebf0e2",
+                        "on-primary-container": "#cbffc2",
+                        "on-primary-fixed-variant": "#005312",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#dfe4d7",
+                        "secondary-fixed-dim": "#e4beb2",
+                        "on-primary-fixed": "#002204",
+                        "surface-dim": "#d7dcce",
+                        "tertiary-fixed-dim": "#fdba55",
+                        "on-tertiary-fixed-variant": "#624000",
+                        "inverse-surface": "#2d3229",
+                        "secondary-container": "#fed7ca",
+                        "on-tertiary-fixed": "#291800",
+                        "on-surface-variant": "#40493d",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#795c51",
+                        "primary-container": "#2e7d32",
+                        "primary-fixed-dim": "#88d982"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "1.5rem",
+                        "md": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            }
+        }
+    </script>
+<style>
+        .glass {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<header class="bg-[#f6fbed]/70 dark:bg-[#181d15]/70 backdrop-blur-xl docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center px-6 py-4 w-full max-w-5xl mx-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#0d631b] dark:text-[#2e7d32]" data-icon="eco">eco</span>
+<h1 class="text-[#0d631b] dark:text-[#2e7d32] font-headline font-extrabold tracking-tight text-lg">CropDoc</h1>
+</div>
+<div class="hidden md:flex gap-8">
+<a class="text-[#0d631b] font-headline font-bold text-lg tracking-tight transition-opacity hover:opacity-80" href="#">Home</a>
+<a class="text-[#181d15] font-headline font-bold text-lg tracking-tight transition-opacity hover:opacity-80" href="#">History</a>
+<a class="text-[#181d15] font-headline font-bold text-lg tracking-tight transition-opacity hover:opacity-80" href="#">Profile</a>
+</div>
+<div class="md:hidden">
+<span class="material-symbols-outlined text-primary" data-icon="menu">menu</span>
+</div>
+</div>
+</header>
+<main class="max-w-5xl mx-auto px-6 pt-8 pb-32">
+<section class="relative mb-12">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+<div class="md:col-span-7 flex flex-col items-start gap-4">
+<span class="font-label text-[0.6875rem] uppercase tracking-[0.05em] text-tertiary-container font-medium px-3 py-1 bg-surface-container-high rounded-full">AI-Powered Diagnostics</span>
+<h2 class="font-headline text-4xl md:text-5xl font-extrabold text-on-surface leading-[1.1] tracking-tight">Protect Your Harvest With Precision.</h2>
+<p class="text-on-surface-variant text-lg max-w-md leading-relaxed">Instantly identify pests, diseases, and nutrient deficiencies using your camera.</p>
+</div>
+<div class="md:col-span-5 flex justify-center">
+<div class="relative w-full aspect-square max-w-sm">
+<img alt="Scan Illustration" class="w-full h-full object-cover rounded-full border-8 border-surface-container-low" data-alt="close-up of a vibrant green soybean plant leaf with sunlight shining through, showing detailed vein structure and healthy texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3svLFYq6bxYbNl_-lbQ_Yq4JJ1zoSsBL3MPYz0FZ1U5206OptadsH_ovhuo2ukbg92mPRnDA4D8Xjsxhe8IhqHTTHGqV_vySbHNWxt22VsZyJu1DG8ya7NkfIzBsyWCzCfSsrbf-P5LmtLorZ1mrd69jwuH60d7blOqbmw8LGIHJLbna8NfAhIsrdommStTAh2VXrgB5tXNDmMgNI56mVAduHWABUt1rhUusxKERNdMmIlL7vwupwpKRys-qXkMAo2k7YXI8miQRm"/>
+<div class="absolute -bottom-4 -right-4 bg-white p-4 rounded-xl shadow-lg border border-outline-variant/10">
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="flex flex-col items-center justify-center gap-6 mb-16">
+<button class="group relative flex flex-col items-center justify-center w-64 h-64 rounded-full bg-gradient-to-br from-primary to-primary-container text-on-primary shadow-xl transition-all hover:scale-105 active:scale-95 duration-300">
+<div class="absolute inset-0 rounded-full border-4 border-primary-fixed/20 animate-pulse"></div>
+<span class="material-symbols-outlined text-7xl mb-4" data-icon="center_focus_weak" style="font-variation-settings: 'FILL' 0;">center_focus_weak</span>
+<span class="font-headline font-bold text-xl">Scan Your Crop</span>
+</button>
+            <button id="uploadBtn" class="flex items-center gap-3 px-8 py-4 bg-secondary-container text-on-secondary-container font-body font-semibold rounded-xl hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined" data-icon="photo_library" style="font-variation-settings: 'FILL' 1;">photo_library</span>
+                Upload from Gallery
+            </button>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+</section>
+<section>
+<div class="flex justify-between items-end mb-6">
+<div>
+<span class="font-label text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant font-medium">Activity</span>
+<h3 class="font-headline text-2xl font-bold">Recent Scans</h3>
+</div>
+<button class="text-primary font-semibold text-sm hover:underline">View All</button>
+</div>
+<div class="flex gap-4 overflow-x-auto pb-6 no-scrollbar">
+<div class="flex-none w-48 bg-surface-container-lowest rounded-xl p-3 border border-outline-variant/10 group cursor-pointer transition-transform hover:-translate-y-1">
+<img alt="Recent Scan 1" class="w-full h-32 object-cover rounded-md mb-3" data-alt="Close up of a tomato leaf showing early signs of blight with small dark spots and yellowing edges" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaClhSFgLOUM2gMAwKLUCdpYErmmzSQQELA00fVRwpe1wK9f2sAffitFiCepe6pYPSHGIKA69XzjLKjU33y2d7uNVjEWk05gogqIUcdYBJTXFCTDlbU9hK9SnkevpLtzM1g-xPXT6IDdKG3lhLl1N67z8-sa96OjC3AkuPv5Cfhtj1pMucbHa4NwU382N3OOZ7iRp7t7smjyrMzhibaksyP3hLEqewgtBgfy_52P-taiL_ULU8h0uMSn616OvdGig0aDSYnqK9lzK3"/>
+<h4 class="font-bold text-sm text-on-surface mb-1">Tomato Leaf</h4>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-xs text-tertiary-container" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+<p class="text-xs text-tertiary font-medium">Blight Detected</p>
+</div>
+</div>
+<div class="flex-none w-48 bg-surface-container-lowest rounded-xl p-3 border border-outline-variant/10 group cursor-pointer transition-transform hover:-translate-y-1">
+<img alt="Recent Scan 2" class="w-full h-32 object-cover rounded-md mb-3" data-alt="Healthy bright green basil leaves growing in a wooden planter under soft natural morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKW6iStrduwebhRCzMEK48c_UuolVaNKEDgf-pvNu1W_h_BFdqWlWihXSxF4N_Rogs9gOLhWYa3Y94FDTCevZI38aKHosF7_jJGJIH_Un9eBcsn-iVZbaDR8pbIfiWXwobTh3p-rD8XY_QnQzVixbRJdCXJoCI6jzjbiOxIrgAQhguq17lG9ECTLqK3squVEnRl8mGH9hvCOZocQj7hh3fRoYL_IK0osVSRejor5vUiFZREEk7vsJcc_J_8ca6Q00UfWPbBnzfNnbu"/>
+<h4 class="font-bold text-sm text-on-surface mb-1">Sweet Basil</h4>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<p class="text-xs text-primary font-medium">Healthy</p>
+</div>
+</div>
+<div class="flex-none w-48 bg-surface-container-lowest rounded-xl p-3 border border-outline-variant/10 group cursor-pointer transition-transform hover:-translate-y-1">
+<img alt="Recent Scan 3" class="w-full h-32 object-cover rounded-md mb-3" data-alt="Young corn sprout emerging from dark fertile soil, showing two vibrant green leaves with dew drops" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdjgZihlaQXE_5CvKS_qB45-PmhHlmfJfeO-qWzudkGoHWUqO97brvsKwW3MkGx0pis_fReZ5BxOrRZViPv6vSY4h_UUF4CgaVO9kbLDrtHoG-263l22wPKEpb3F7I1ENFYCxqKPwPEUPvLSSIMNoeNwwddVWlNXWQI3n7kTFiUSvoq4tZBUwG3Fw6RMnfsJYhUpHm5w-vZAkc2roMyDGqq4Qlctu1-2dn-WtguZJ6CvQYDOUJdsuJmYTEj7mDqAQEkDDD9ExUyh04"/>
+<h4 class="font-bold text-sm text-on-surface mb-1">Maize Sprout</h4>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<p class="text-xs text-primary font-medium">Healthy</p>
+</div>
+</div>
+<div class="flex-none w-48 bg-surface-container-lowest rounded-xl p-3 border border-outline-variant/10 group cursor-pointer transition-transform hover:-translate-y-1">
+<img alt="Recent Scan 4" class="w-full h-32 object-cover rounded-md mb-3" data-alt="Detailed close up of an apple tree leaf with light brown powdery mildew spots on the surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTwqwT5w8drZ772Oo6mRmiHVgKpGRscipBKq5x4_1WU8_4VJLnIjAizYfJOmQdRmoj9UfoM4-_WGCxxAIaiIUlCJjAABWxCsgMiMNGTXFcnSEwYtbUr9KfCwBI30EjsIZoGdCc6bNx_HOStBwV5-C4M9wshkSazbPpKq3tLVXgga8J1ZFwrVCqL3odghscyyCQqTxTaWAYBOSt8bqtN2H1zih9p7knyCG8HGS7Ld1Bmgjqhzm0qe7ShebJCioxxEgs9DuGDCjp1Aox"/>
+<h4 class="font-bold text-sm text-on-surface mb-1">Apple Leaf</h4>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-xs text-tertiary-container" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+<p class="text-xs text-tertiary font-medium">Mildew Spotted</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-[#f6fbed]/70 dark:bg-[#181d15]/70 backdrop-blur-xl z-50 rounded-t-[1.5rem] shadow-[0_-4px_32px_rgba(24,29,21,0.06)] md:hidden">
+<a class="flex flex-col items-center justify-center bg-[#ffffff] dark:bg-[#2e7d32]/20 text-[#0d631b] dark:text-[#ffffff] rounded-[1.5rem] px-5 py-2 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home_max" style="font-variation-settings: 'FILL' 1;">home_max</span>
+<span class="font-inter text-[11px] font-medium tracking-[0.05em] uppercase">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#181d15]/60 dark:text-[#dfe4d7]/60 px-5 py-2 hover:bg-[#f1f5e7] dark:hover:bg-[#181d15] transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-inter text-[11px] font-medium tracking-[0.05em] uppercase">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#181d15]/60 dark:text-[#dfe4d7]/60 px-5 py-2 hover:bg-[#f1f5e7] dark:hover:bg-[#181d15] transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-inter text-[11px] font-medium tracking-[0.05em] uppercase">Profile</span>
+</a>
+</nav>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script>
+        document.getElementById('uploadBtn').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', async function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Show loading state
+                const uploadBtn = document.getElementById('uploadBtn');
+                const originalText = uploadBtn.innerHTML;
+                uploadBtn.innerHTML = '<span class="material-symbols-outlined">sync</span> Analyzing...';
+                uploadBtn.disabled = true;
+
+                try {
+                    // Deep learning analysis for all images
+                    const formData = new FormData();
+                    formData.append('image', file);
+
+                    const response = await fetch('http://localhost:3000/api/analyze', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Analysis failed');
+                    }
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        // Redirect to diagnosis with real ML results
+                        const params = new URLSearchParams({
+                            disease: result.disease,
+                            confidence: result.confidence,
+                            source: 'ml',
+                            predictions: JSON.stringify(result.predictions)
+                        });
+                        window.location.href = '../diagnosis_treatment/code.html?' + params.toString();
+                    } else {
+                        throw new Error(result.error || 'Analysis failed');
+                    }
+
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    alert('Analysis failed. Please make sure the server is running and try again.');
+                    // Reset button
+                    uploadBtn.innerHTML = originalText;
+                    uploadBtn.disabled = false;
+                }
+            }
+        });
+    </script>
+</body></html>

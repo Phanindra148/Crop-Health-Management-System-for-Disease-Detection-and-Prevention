@@ -1,0 +1,259 @@
+<html><head><meta charset="utf-8"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "outline": "#707a6c",
+                "surface-variant": "#dfe4d7",
+                "surface-container-high": "#e5eadc",
+                "on-primary-fixed": "#002204",
+                "on-tertiary": "#ffffff",
+                "surface-dim": "#d7dcce",
+                "primary": "#0d631b",
+                "on-tertiary-container": "#ffeedc",
+                "on-surface": "#181d15",
+                "surface-container-low": "#f1f5e7",
+                "primary-container": "#2e7d32",
+                "inverse-surface": "#2d3229",
+                "tertiary-container": "#966300",
+                "on-tertiary-fixed": "#291800",
+                "secondary-container": "#fed7ca",
+                "tertiary": "#754d00",
+                "primary-fixed-dim": "#88d982",
+                "outline-variant": "#bfcaba",
+                "secondary": "#75584d",
+                "on-primary-container": "#cbffc2",
+                "on-error-container": "#93000a",
+                "surface-container-lowest": "#ffffff",
+                "on-secondary-fixed-variant": "#5b4137",
+                "tertiary-fixed-dim": "#fdba55",
+                "surface-tint": "#1b6d24",
+                "on-secondary-container": "#795c51",
+                "surface-container": "#ebf0e2",
+                "on-primary-fixed-variant": "#005312",
+                "surface-bright": "#f6fbed",
+                "secondary-fixed": "#ffdbce",
+                "primary-fixed": "#a3f69c",
+                "on-tertiary-fixed-variant": "#624000",
+                "on-secondary-fixed": "#2b160f",
+                "on-secondary": "#ffffff",
+                "on-background": "#181d15",
+                "error-container": "#ffdad6",
+                "surface": "#f6fbed",
+                "secondary-fixed-dim": "#e4beb2",
+                "on-primary": "#ffffff",
+                "on-error": "#ffffff",
+                "background": "#f6fbed",
+                "inverse-primary": "#88d982",
+                "error": "#ba1a1a",
+                "tertiary-fixed": "#ffddb2",
+                "surface-container-highest": "#dfe4d7",
+                "on-surface-variant": "#40493d",
+                "inverse-on-surface": "#eef3e5"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "fontFamily": {
+                "headline": ["Manrope"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+        }
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .scan-line {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #0d631b, transparent);
+    animation: scan 3s ease-in-out infinite;
+    position: absolute;
+    width: 100%;
+    z-index: 10;
+    box-shadow: 0 0 15px #2e7d32;
+  }
+  @keyframes scan {
+    0% { top: 0%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+</style>
+</head><body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container min-h-screen flex">
+<!-- SideNavBar Anchor -->
+<aside class="hidden md:flex flex-col h-screen w-64 bg-[#f1f5e7] dark:bg-[#181d15] p-4 gap-2 border-r-0 fixed left-0 top-0 z-40">
+<div class="flex items-center gap-3 px-2 py-4 mb-6">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div>
+<h1 class="font-['Manrope'] text-xl font-bold text-[#0d631b]">CropDoc</h1>
+<p class="text-[10px] uppercase tracking-widest opacity-60 font-label">Digital Greenhouse</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-[#ffffff] dark:bg-[#2e7d32]/20 text-[#0d631b] dark:text-[#ffffff] rounded-xl shadow-sm hover:translate-x-1 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Inter'] font-medium">Home</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#181d15] dark:text-[#dfe4d7] hover:bg-[#e5eadc] dark:hover:bg-[#d7dcce]/5 rounded-xl hover:translate-x-1 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-['Inter'] font-medium">History</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#181d15] dark:text-[#dfe4d7] hover:bg-[#e5eadc] dark:hover:bg-[#d7dcce]/5 rounded-xl hover:translate-x-1 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Inter'] font-medium">Profile</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-1 border-t border-outline-variant/10 pt-4">
+<a class="flex items-center gap-3 px-4 py-2 text-[#181d15] dark:text-[#dfe4d7] hover:bg-[#e5eadc] rounded-xl text-sm transition-all" href="#">
+<span class="material-symbols-outlined text-sm">help</span>
+<span class="font-['Inter']">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#181d15] dark:text-[#dfe4d7] hover:bg-[#e5eadc] rounded-xl text-sm transition-all" href="#">
+<span class="material-symbols-outlined text-sm">settings</span>
+<span class="font-['Inter']">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 ml-0 md:ml-64 min-h-screen flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden">
+<!-- TopAppBar for Mobile/Desktop -->
+<header class="fixed top-0 right-0 left-0 md:left-64 z-50 bg-[#f6fbed]/70 backdrop-blur-md px-8 py-4 flex justify-between items-center">
+<span class="md:hidden font-['Manrope'] text-2xl font-black text-[#0d631b] tracking-tighter">CropDoc</span>
+<div class="hidden md:block">
+<span class="text-sm font-label uppercase tracking-widest text-outline">Session: 4920-X</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="close up professional headshot of a middle aged male agronomist with friendly expression in natural daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBb0XMNdyzRPxFmFWp_VNdQYK1evpHDIAIYuLfIRuTsYvO2evS8uywNaesLx90XvPjFezSuvUr6dvUj1cna_ujlasYHDj6jAuMeMLQX1WKHfNWvgHMLMp9rizAqrT1KWpgbwSc5mSkCoB5LOdyNEmzV7XrS2vhVIaviBWwz5KUNuVjDINnof-B3ENaTNup2AV1SR_3qC-3qPhigPDozwzHk42NDeYWVhThtCoV7ZE1XWHn5Mc2vPdehXSGOMYUYvhIGCEaPBUznIJIs"/>
+</div>
+</div>
+</header>
+<!-- Analysis Centerpiece -->
+<div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<!-- Asymmetric Specimen Card -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<div class="relative group">
+<!-- Glass Background Decor -->
+<div class="absolute -inset-4 bg-primary/5 rounded-[2rem] blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+<!-- Main Specimen Image Container -->
+<div class="relative rounded-[2rem] overflow-hidden border-4 border-surface-container-lowest bg-surface-container-low aspect-[4/3] shadow-xl">
+<div class="scan-line"></div>
+<img class="w-full h-full object-cover" data-alt="dramatic close-up of a vibrant green tomato leaf with subtle yellow spots showing early signs of blight, moody lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAX_9xn61aAoHHxzMz_FXJ-DYjtk-WVu0N5g-OAAp2_QX-lK_oWnXQ5TLbdxpnZtqWWZtyf35DclBoGWTAfPDRl_AYektAmSQjP0vjkM-vjpfYwsgDiKxsFE2z9VbLeV_wsAjssx1bsoHwGiI9eSASihiHDLqukcSDO7Nc1eJ9x7wWXu7bg4l69US24xi4A2EkNaCfIw-h2Igf3knQkIp6G_ki1SwMs4kc47VcYBpUtZ5A5KXRXzWS96beQQU_H1ni6uwd_8Haf0bDW"/>
+<!-- HUD Overlays -->
+<div class="absolute top-6 left-6 flex flex-col gap-2">
+<div class="bg-on-surface/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] text-surface-bright font-label tracking-widest uppercase">
+                Resolution: 4K Native
+              </div>
+<div class="bg-primary/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] text-surface-bright font-label tracking-widest uppercase">
+                Sensor: Optic-V3
+              </div>
+</div>
+<div class="absolute bottom-6 right-6">
+<div class="bg-surface-container-lowest/90 backdrop-blur-md p-4 rounded-xl shadow-lg border border-outline-variant/20">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<span class="text-xs font-bold text-primary font-headline">ANALYZING SPECIMEN...</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Analysis Status Panel -->
+<div class="lg:col-span-5 space-y-8">
+<div class="space-y-4">
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-[11px] font-bold tracking-widest uppercase">
+            Active Neural Link
+          </div>
+<h2 class="text-4xl md:text-5xl font-black text-on-surface font-headline leading-tight tracking-tighter">
+            Neural Analysis in Progress
+          </h2>
+<p class="text-on-surface-variant text-lg leading-relaxed max-w-md">
+            Our proprietary Vision Engine is currently cross-referencing this specimen against 4.2 million botanical anomalies.
+          </p>
+</div>
+<!-- Task List - No Lines, Tonal Separation -->
+<div class="space-y-3">
+<div class="p-4 bg-surface-container-lowest rounded-xl flex items-center gap-4 shadow-sm border-l-4 border-primary">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="text-sm font-bold text-on-surface font-headline">Identifying Disease Patterns</p>
+<p class="text-[11px] text-outline font-label uppercase">88% Complete</p>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low rounded-xl flex items-center gap-4">
+<span class="material-symbols-outlined text-outline">sync</span>
+<div>
+<p class="text-sm font-medium text-on-surface font-headline opacity-80">Calculating Defoliation Index</p>
+<p class="text-[11px] text-outline font-label uppercase">Processing...</p>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low rounded-xl flex items-center gap-4">
+<span class="material-symbols-outlined text-outline">cloud_sync</span>
+<div>
+<p class="text-sm font-medium text-on-surface font-headline opacity-80">Environmental Data Correlating</p>
+<p class="text-[11px] text-outline font-label uppercase">Waiting...</p>
+</div>
+</div>
+</div>
+<!-- Progress Bar Custom -->
+<div class="pt-4">
+<div class="flex justify-between items-end mb-2">
+<span class="text-[10px] font-black text-primary font-headline uppercase tracking-widest">Global Progress</span>
+<span class="text-2xl font-black text-primary font-headline">64%</span>
+</div>
+<div class="h-3 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container rounded-full" style="width: 64%"></div>
+</div>
+</div>
+<div class="pt-6">
+<button class="group flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-xl font-bold font-headline shadow-lg shadow-primary/20 hover:scale-95 transition-transform">
+<span>Interrupt Analysis</span>
+<span class="material-symbols-outlined text-sm group-hover:rotate-90 transition-transform">close</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Background Decorative Elements (Organic shapes) -->
+<div class="absolute -top-20 -right-20 w-96 h-96 bg-tertiary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-40 -left-20 w-[30rem] h-[30rem] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+</main>
+<!-- BottomNavBar Anchor (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-[#f6fbed]/70 backdrop-blur-md flex justify-around items-center py-3 px-6 z-50">
+<a class="flex flex-col items-center gap-1 text-[#181d15] opacity-70" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-[#0d631b]" href="#">
+<div class="bg-primary-container/20 p-2 rounded-xl">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">scan</span>
+</div>
+<span class="text-[10px] font-bold">Scanning</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-[#181d15] opacity-70" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="text-[10px] font-medium">History</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-[#181d15] opacity-70" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline": "#707a6c",
+                    "surface-variant": "#dfe4d7",
+                    "surface-container-high": "#e5eadc",
+                    "on-primary-fixed": "#002204",
+                    "on-tertiary": "#ffffff",
+                    "surface-dim": "#d7dcce",
+                    "primary": "#0d631b",
+                    "on-tertiary-container": "#ffeedc",
+                    "on-surface": "#181d15",
+                    "surface-container-low": "#f1f5e7",
+                    "primary-container": "#2e7d32",
+                    "inverse-surface": "#2d3229",
+                    "tertiary-container": "#966300",
+                    "on-tertiary-fixed": "#291800",
+                    "secondary-container": "#fed7ca",
+                    "tertiary": "#754d00",
+                    "primary-fixed-dim": "#88d982",
+                    "outline-variant": "#bfcaba",
+                    "secondary": "#75584d",
+                    "on-primary-container": "#cbffc2",
+                    "on-error-container": "#93000a",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed-variant": "#5b4137",
+                    "tertiary-fixed-dim": "#fdba55",
+                    "surface-tint": "#1b6d24",
+                    "on-secondary-container": "#795c51",
+                    "surface-container": "#ebf0e2",
+                    "on-primary-fixed-variant": "#005312",
+                    "surface-bright": "#f6fbed",
+                    "secondary-fixed": "#ffdbce",
+                    "primary-fixed": "#a3f69c",
+                    "on-tertiary-fixed-variant": "#624000",
+                    "on-secondary-fixed": "#2b160f",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#181d15",
+                    "error-container": "#ffdad6",
+                    "surface": "#f6fbed",
+                    "secondary-fixed-dim": "#e4beb2",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "background": "#f6fbed",
+                    "inverse-primary": "#88d982",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed": "#ffddb2",
+                    "surface-container-highest": "#dfe4d7",
+                    "on-surface-variant": "#40493d",
+                    "inverse-on-surface": "#eef3e5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      h1, h2, h3 {
+        font-family: 'Manrope', sans-serif;
+      }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-[#f6fbed]/70 dark:bg-[#181d15]/70 backdrop-blur-md flex justify-between items-center px-8 py-4 max-w-full">
+<div class="text-2xl font-black text-[#0d631b] dark:text-[#2e7d32] tracking-tighter font-['Manrope']">CropDoc</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-['Manrope'] font-bold tracking-tight text-[#181d15] dark:text-[#dfe4d7] opacity-70 hover:text-[#0d631b] transition-colors duration-200" href="#">Home</a>
+<a class="font-['Manrope'] font-bold tracking-tight text-[#0d631b] dark:text-[#2e7d32] border-b-2 border-[#0d631b] pb-1 hover:text-[#0d631b] transition-colors duration-200" href="#">History</a>
+<a class="font-['Manrope'] font-bold tracking-tight text-[#181d15] dark:text-[#dfe4d7] opacity-70 hover:text-[#0d631b] transition-colors duration-200" href="#">Profile</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#0d631b] p-2 hover:bg-surface-container-high rounded-full transition-colors">notifications</button>
+<button class="material-symbols-outlined text-[#0d631b] p-2 hover:bg-surface-container-high rounded-full transition-colors">settings</button>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest">
+<img alt="User profile avatar" data-alt="Close-up portrait of a professional agronomist wearing a beige linen shirt, soft natural outdoor lighting, smiling warmly" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAM2fn-cE7ZCzYOHVPRLILGX-mnlebo8nTEs7E5Q9DQQbXkvybKU9tfeUpOoH-MNywRXiGBVjpJ0jDNz5_1AMKne1Os4JsmKvnOGWqtODGuJMHRqp071BWWb9dAaUgIZ9XcXzPiqFKyjrM_2_z6X3t9e3ToOBzZ5GLr91jUvHBTA-pIjQEb1LvIp8fQ7nOd9liD4Csl4fepqgpxiqr_JflS5QTiAcOPa8XtQBun0alxdf30pxtprQeHEsVfeaGTIw4uMlxeMQjxmb-u"/>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-12 px-8 max-w-7xl mx-auto">
+<!-- Main Layout: Two Column -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Column: Analysis & Diagnosis -->
+<div class="lg:col-span-5 space-y-8">
+<!-- Specimen Header -->
+<div class="relative group">
+<div class="rounded-[2rem] overflow-hidden aspect-square bg-surface-container shadow-sm border border-outline-variant/15">
+<img alt="Tomato Late Blight analysis" class="w-full h-full object-cover" data-alt="Macro photography of a tomato leaf showing characteristic late blight symptoms with brownish-black water-soaked spots and white fungal growth on the underside, shallow depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApic1QS6wZc1tAQsquScAfvQ9dtZax_ZIXWRSFHFUi7qfu-qnUsZWPoQOq-KPMVh5ObflcVrD-JALKY6GXBEE4ePZgxnlu2bxBKO_Fx2mm2QxR8rTRixe_xDfKkRxZjdwIUdnoIIRvX-xktWhMwcQxmkLGT0sKWkKDcSDjLTEglWBUNqw3SH3lBG06hye_Vi80Hrc2fj0t2oOVcdJ9Pa8nBk6IJEhIKdQBMh5x8rAu-VeQRzJ26M3fp1t7BpN9eT086cIj67mM8JPJ"/>
+<!-- Overlay Glass Tag -->
+<div class="absolute bottom-6 left-6 right-6 bg-surface/70 backdrop-blur-xl p-6 rounded-xl border border-white/20">
+<span class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase block mb-1">SPECIMEN ID: #TD-8821</span>
+<h2 class="text-3xl font-extrabold text-primary tracking-tight">Tomato Late Blight</h2>
+<p class="text-sm text-on-surface-variant font-medium">Detected in Field Zone B-4</p>
+</div>
+</div>
+</div>
+<!-- Diagnosis Stats Bento -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] border border-outline-variant/10">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">Confidence</span>
+</div>
+<div class="text-4xl font-extrabold text-on-surface">94.2<span class="text-lg opacity-50">%</span></div>
+<div class="mt-3 h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[94.2%]"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] border border-outline-variant/10">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">Risk Level</span>
+</div>
+<div class="text-4xl font-extrabold text-tertiary">HIGH</div>
+<div class="mt-3 h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full w-[85%]"></div>
+</div>
+</div>
+</div>
+<!-- Bio-Status Description -->
+<div class="bg-surface-container-low p-8 rounded-[1.5rem]">
+<h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">info</span>
+                        About this Condition
+                    </h3>
+<p class="text-on-surface-variant leading-relaxed">
+                        Phytophthora infestans is a highly destructive oomycete that affects tomatoes and potatoes. Given current humidity levels (82%), the pathogen is likely to spread rapidly across adjacent healthy leaves within 48 hours.
+                    </p>
+</div>
+</div>
+<!-- Right Column: Treatment & Steps -->
+<div class="lg:col-span-7 space-y-6">
+<!-- Treatment Card -->
+<div class="bg-surface-container-lowest p-8 rounded-[2rem] shadow-sm border border-outline-variant/5">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h2 class="text-2xl font-extrabold text-on-surface tracking-tight">How to Cure</h2>
+<p class="text-sm text-on-surface-variant">Recommended treatment plan by CropDoc AI</p>
+</div>
+<div class="bg-primary-container/10 px-4 py-2 rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-primary scale-90">science</span>
+<span class="text-xs font-bold text-primary">ORGANIC FIRST</span>
+</div>
+</div>
+<!-- Steps Timeline -->
+<div class="space-y-6 relative before:absolute before:left-[1.25rem] before:top-2 before:bottom-2 before:w-px before:bg-surface-variant">
+<!-- Step 1 -->
+<div class="relative pl-12">
+<div class="absolute left-0 top-0 w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary z-10 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">content_cut</span>
+</div>
+<h4 class="text-lg font-bold text-on-surface mb-2">Immediate Pruning</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-3">
+                                Remove all affected leaves and stems. Ensure you cut at least 2 inches into healthy tissue. DO NOT compost these clippings; burn or bag them immediately.
+                            </p>
+<div class="flex gap-2">
+<span class="bg-surface-container-high px-3 py-1 rounded-md text-[0.6875rem] font-bold text-on-surface-variant">TIMING: ASAP</span>
+<span class="bg-surface-container-high px-3 py-1 rounded-md text-[0.6875rem] font-bold text-on-surface-variant">TOOLS: STERILIZED</span>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="relative pl-12">
+<div class="absolute left-0 top-0 w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary z-10">
+<span class="material-symbols-outlined">sanitizer</span>
+</div>
+<h4 class="text-lg font-bold text-on-surface mb-2">Copper Fungicide Application</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-3">
+                                Apply a liquid copper-based fungicide to the entire plant, focusing on the undersides of the leaves. This will create a protective barrier against further spore germination.
+                            </p>
+<div class="flex gap-2">
+<span class="bg-secondary-container px-3 py-1 rounded-md text-[0.6875rem] font-bold text-on-secondary-container tracking-wide">ORGANIC OPTION</span>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="relative pl-12">
+<div class="absolute left-0 top-0 w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary z-10">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<h4 class="text-lg font-bold text-on-surface mb-2">Modify Irrigation</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                                Switch to drip irrigation if currently using overhead sprinklers. Keep foliage dry to prevent the humid microclimate that allows Blight to thrive.
+                            </p>
+</div>
+</div>
+<!-- CTA Actions -->
+<div class="mt-12 flex flex-wrap gap-4 pt-8 border-t border-surface-variant/30">
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-8 py-4 rounded-xl font-bold flex items-center gap-3 active:scale-95 transition-transform shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined">shopping_cart</span>
+                            Order Treatment Kit
+                        </button>
+<button class="bg-secondary-container text-on-secondary-container px-8 py-4 rounded-xl font-bold flex items-center gap-3 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">file_download</span>
+                            Save Report
+                        </button>
+</div>
+</div>
+<!-- Precautions Checklist -->
+<div class="bg-surface-container-high p-8 rounded-[2rem]">
+<h3 class="text-xl font-bold mb-6 text-on-surface flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary">fact_check</span>
+                        Precautions Checklist
+                    </h3>
+<div class="space-y-4">
+<label class="flex items-start gap-4 p-4 bg-surface-container-lowest rounded-xl cursor-pointer hover:translate-x-1 transition-all">
+<input class="mt-1 w-5 h-5 rounded-md border-outline text-primary focus:ring-primary/20" type="checkbox"/>
+<div>
+<span class="font-semibold block">Sterilize Shears</span>
+<span class="text-xs text-on-surface-variant">Dip in 70% alcohol between every single cut to prevent spread.</span>
+</div>
+</label>
+<label class="flex items-start gap-4 p-4 bg-surface-container-lowest rounded-xl cursor-pointer hover:translate-x-1 transition-all">
+<input class="mt-1 w-5 h-5 rounded-md border-outline text-primary focus:ring-primary/20" type="checkbox"/>
+<div>
+<span class="font-semibold block">Isolate Tools</span>
+<span class="text-xs text-on-surface-variant">Do not use the same gloves for healthy plants today.</span>
+</div>
+</label>
+<label class="flex items-start gap-4 p-4 bg-surface-container-lowest rounded-xl cursor-pointer hover:translate-x-1 transition-all">
+<input class="mt-1 w-5 h-5 rounded-md border-outline text-primary focus:ring-primary/20" type="checkbox"/>
+<div>
+<span class="font-semibold block">Check Weather</span>
+<span class="text-xs text-on-surface-variant">Ensure 24 hours of no rain after fungicide application.</span>
+</div>
+</label>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB (Suppressed on Details according to rules, but kept "Back to Top" for usability) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-2xl active:scale-95 transition-transform z-40">
+<span class="material-symbols-outlined">arrow_upward</span>
+</button>
+</body></html>
