@@ -173,7 +173,7 @@
             const text = steps[index].querySelector('span:last-child');
             
             if (icon && text) {
-                icon.setAttribute('data-icon', 'sync');
+                icon.dataset.icon = 'sync';
                 icon.style.fontVariationSettings = "'FILL' 0";
                 text.textContent = text.textContent.replace('...', '');
                 text.classList.add('text-primary');
@@ -203,9 +203,9 @@
                     }
                     const checkIcon = document.createElement('span');
                     checkIcon.className = 'material-symbols-outlined text-primary text-sm';
-                    checkIcon.setAttribute('data-icon', 'check_circle');
+                    checkIcon.dataset.icon = 'check_circle';
                     checkIcon.style.fontVariationSettings = "'FILL' 1";
-                    prevStep.insertBefore(checkIcon, prevText);
+                    prevText.before(checkIcon);
                 }
                 if (prevText) {
                     prevText.classList.remove('text-primary');
@@ -218,7 +218,7 @@
         } else {
             // All steps completed, redirect to diagnosis
             setTimeout(() => {
-                window.location.href = '../diagnosis_treatment/code.html?disease=blight';
+                globalThis.location.href = '../diagnosis_treatment/code.html?disease=blight';
             }, 1000);
         }
     }

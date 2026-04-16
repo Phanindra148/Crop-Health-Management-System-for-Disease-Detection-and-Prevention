@@ -368,13 +368,12 @@
         <span class="material-symbols-outlined fill-icon text-primary">eco</span>
         <span class="text-xl font-black text-primary tracking-tighter font-headline">CropDoc</span>
       </button>
-      <div class="flex gap-6 items-center">
-        <a id="nav-home-link" onclick="navigate('home')"
-          class="cursor-pointer font-headline font-bold tracking-tight text-primary border-b-2 border-primary pb-0.5 transition-all duration-200">Home</a>
-        <a id="nav-history-link" onclick="navigate('history')"
-          class="cursor-pointer font-headline font-bold tracking-tight text-on-surface opacity-60 hover:opacity-100 hover:text-primary pb-0.5 border-b-2 border-transparent hover:border-primary transition-all duration-200">History</a>
-        <a id="nav-profile-link" onclick="navigate('profile')"
-          class="cursor-pointer font-headline font-bold tracking-tight text-on-surface opacity-60 hover:opacity-100 hover:text-primary pb-0.5 border-b-2 border-transparent hover:border-primary transition-all duration-200">Profile</a>
+        <button id="nav-home-link" onclick="navigate('home')"
+          class="cursor-pointer font-headline font-bold tracking-tight text-primary border-b-2 border-primary pb-0.5 transition-all duration-200">Home</button>
+        <button id="nav-history-link" onclick="navigate('history')"
+          class="cursor-pointer font-headline font-bold tracking-tight text-on-surface opacity-60 hover:opacity-100 hover:text-primary pb-0.5 border-b-2 border-transparent hover:border-primary transition-all duration-200">History</button>
+        <button id="nav-profile-link" onclick="navigate('profile')"
+          class="cursor-pointer font-headline font-bold tracking-tight text-on-surface opacity-60 hover:opacity-100 hover:text-primary pb-0.5 border-b-2 border-transparent hover:border-primary transition-all duration-200">Profile</button>
       </div>
     </div>
     <div class="flex items-center gap-4">
@@ -468,7 +467,7 @@
 
       <form onsubmit="handleLogin(event)" class="space-y-5">
         <div class="space-y-2">
-          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Email
+          <label for="login-email" class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Email
             Address</label>
           <div class="relative">
             <span
@@ -478,7 +477,7 @@
           </div>
         </div>
         <div class="space-y-2">
-          <label
+          <label for="login-password"
             class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Password</label>
           <div class="relative">
             <span
@@ -523,7 +522,7 @@
 
       <form onsubmit="handleSignup(event)" class="space-y-5">
         <div class="space-y-2">
-          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Full
+          <label for="signup-name" class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Full
             Name</label>
           <div class="relative">
             <span
@@ -533,7 +532,7 @@
           </div>
         </div>
         <div class="space-y-2">
-          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Email
+          <label for="signup-email" class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Email
             Address</label>
           <div class="relative">
             <span
@@ -543,7 +542,7 @@
           </div>
         </div>
         <div class="space-y-2">
-          <label
+          <label for="signup-password"
             class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Password</label>
           <div class="relative">
             <span
@@ -1117,7 +1116,7 @@
      SCAN SOURCE PICKER — bottom sheet
 ════════════════════════════════════════════ -->
   <div id="scan-picker-overlay" class="fixed inset-0 z-[80] items-end justify-center bg-black/40"
-    onclick="closePicker(event)">
+    role="button" tabindex="0" onkeydown="if(event.key==='Enter') closePicker(event)" onclick="closePicker(event)">
     <div id="scan-picker-sheet" class="w-full max-w-lg bg-surface rounded-t-[2rem] px-6 pt-4 pb-10 shadow-2xl">
       <!-- drag handle -->
       <div class="w-12 h-1.5 bg-outline-variant rounded-full mx-auto mb-6"></div>
@@ -1220,7 +1219,7 @@
         and paste it below.
       </p>
       <div class="space-y-2 mb-5">
-        <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label">Gemini API
+        <label for="api-key-input" class="text-xs font-bold uppercase tracking-wider text-on-surface-variant font-label">Gemini API
           Key</label>
         <div class="relative">
           <input id="api-key-input" type="password" autocomplete="off" placeholder="AIzaSy..."
@@ -1266,12 +1265,12 @@
           <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 font-label">Account Identity</p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="space-y-1.5">
-              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Full Name</label>
+              <label for="edit-profile-name" class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Full Name</label>
               <input id="edit-profile-name" type="text" placeholder="Your Name" required
                 class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
             </div>
             <div class="space-y-1.5">
-              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Location</label>
+              <label for="edit-profile-location" class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Location</label>
               <input id="edit-profile-location" type="text" placeholder="Punjab, India"
                 class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
             </div>
@@ -1285,22 +1284,22 @@
           <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 font-label">Farm Details</p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="space-y-1.5">
-              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Farm Size</label>
+              <label for="edit-farm-size" class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Farm Size</label>
               <input id="edit-farm-size" type="text" placeholder="e.g. 12.5 Acres"
                 class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
             </div>
             <div class="space-y-1.5">
-              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Primary Crops</label>
+              <label for="edit-farm-crops" class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Primary Crops</label>
               <input id="edit-farm-crops" type="text" placeholder="e.g. Tomato, Wheat"
                 class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
             </div>
             <div class="space-y-1.5">
-              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Soil Type</label>
+              <label for="edit-farm-soil" class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Soil Type</label>
               <input id="edit-farm-soil" type="text" placeholder="e.g. Alluvial"
                 class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
             </div>
             <div class="space-y-1.5">
-              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Irrigation</label>
+              <label for="edit-farm-irrigation" class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Irrigation</label>
               <input id="edit-farm-irrigation" type="text" placeholder="e.g. Drip"
                 class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
             </div>
@@ -1314,17 +1313,17 @@
           <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 font-label">App Preferences</p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="space-y-1.5">
-              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Language</label>
+              <label for="edit-app-lang" class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Language</label>
               <input id="edit-app-lang" type="text" placeholder="English (India)"
                 class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
             </div>
             <div class="space-y-1.5">
-              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Notifications</label>
+              <label for="edit-app-notif" class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Notifications</label>
               <input id="edit-app-notif" type="text" placeholder="e.g. Enabled"
                 class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
             </div>
             <div class="col-span-1 sm:col-span-2 space-y-1.5">
-              <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Privacy & Data</label>
+              <label for="edit-app-privacy" class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant font-label ml-1">Privacy & Data</label>
               <input id="edit-app-privacy" type="text" placeholder="e.g. Research Support"
                 class="w-full px-4 py-3 bg-surface-container-high rounded-xl text-on-surface border-none focus:ring-2 focus:ring-primary/20 text-sm" />
             </div>
@@ -1350,11 +1349,12 @@
     let currentPage = 'home';
     let currentUser = JSON.parse(localStorage.getItem('cropdoc_user') || 'null');
     const LOCAL_BACKEND = 'http://localhost:3001';
-    const API_BASE = window.location.protocol === 'file:'
-      ? LOCAL_BACKEND
-      : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-        ? LOCAL_BACKEND
-        : '';
+    let API_BASE = '';
+    if (globalThis.location.protocol === 'file:') {
+      API_BASE = LOCAL_BACKEND;
+    } else if (globalThis.location.hostname === 'localhost' || globalThis.location.hostname === '127.0.0.1') {
+      API_BASE = LOCAL_BACKEND;
+    }
 
     /* ── Navigate ── */
     function navigate(page) {
@@ -1370,7 +1370,7 @@
       if (target) target.classList.add('active');
       currentPage = page;
       // Scroll to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      globalThis.scrollTo({ top: 0, behavior: 'smooth' });
 
       // Hide/Show Navbars based on page
       const isAuthPage = page === 'login' || page === 'signup';
@@ -1423,6 +1423,7 @@
           errorEl.classList.add('bg-error/10', 'text-error');
         }
       } catch (err) {
+        console.error('Login Error:', err);
         errorEl.textContent = 'Connection error';
         errorEl.classList.remove('hidden', 'bg-primary/10', 'text-primary');
         errorEl.classList.add('bg-error/10', 'text-error');
@@ -1460,6 +1461,7 @@
           errorEl.classList.remove('hidden');
         }
       } catch (err) {
+        console.error('Signup Error:', err);
         errorEl.textContent = 'Connection error';
         errorEl.classList.remove('hidden');
       }
@@ -1587,7 +1589,7 @@
             }
           })
         });
-      } catch (err) { console.warn('Profile sync failed, saved locally.'); }
+      } catch (err) { console.warn('Profile sync failed, saved locally.', err); }
     }
 
     // Initial redirect if not logged in
@@ -1602,7 +1604,7 @@
     });
 
     function checkProtocol() {
-      if (window.location.protocol === 'file:') {
+      if (globalThis.location.protocol === 'file:') {
         const banner = document.getElementById('protocol-warning');
         if (banner) banner.classList.remove('hidden');
       }
@@ -1718,7 +1720,7 @@
       const img = document.querySelector('#page-analyzing img');
       if (img) img.src = src;
       // Also swap the diagnosis scanned image for continuity
-      const diagImg = document.querySelector('#page-diagnosis .aspect-\\[16\\/10\\] img');
+      const diagImg = document.querySelector(String.raw`#page-diagnosis .aspect-\[16\/10\] img`);
       if (diagImg) diagImg.src = src;
     }
     /* ── Magic Demo Modal ── */
@@ -1738,7 +1740,9 @@
       if (m) m.classList.remove('open');
     }
 
-    function toggleKeyVis() { } // Unused in mode
+    function toggleKeyVis() { 
+      // intentionally empty 
+    }
 
     function saveApiKey() {
       var key = document.getElementById('api-key-input').value;
@@ -1838,16 +1842,14 @@
 
       // Optimize image before sending - ultra fast 400px width and high compression to boost deep learning model speed
       const src = await optimizeImage(originalSrc, 400, 0.5);
-      const optimizedMatch = src.match(/^data:([^;]+);base64,(.+)$/);
-      const imgB64 = optimizedMatch ? optimizedMatch[2] : m[2];
 
       // Initialize Demo Value if not set
       if (!localStorage.getItem('magic_demo_disease')) {
         localStorage.setItem('magic_demo_disease', '0');
       }
 
-      const demoIndex = parseInt(localStorage.getItem('magic_demo_disease'), 10);
-      let finalResult = JSON.parse(JSON.stringify(DISEASE_DB[demoIndex] ? DISEASE_DB[demoIndex].data : DISEASE_DB[7].data));
+      const demoIndex = Number.parseInt(localStorage.getItem('magic_demo_disease'), 10);
+      let finalResult = structuredClone(DISEASE_DB[demoIndex] ? DISEASE_DB[demoIndex].data : DISEASE_DB[7].data);
 
       try {
         // Skip all intermediate animations completely as per user request to speed things up
@@ -1872,8 +1874,64 @@
     function _ic(name, cx) {
       return '<span class="material-symbols-outlined ' + (cx || '') + '" style="font-variation-settings:\' FILL\' 1,\'wght\' 400,\'GRAD\' 0,\'opsz\' 24">' + name + '</span>';
     }
+    function buildCureHtml(curePlan) {
+      var cureH = (curePlan || []).map(function (c, i) {
+        var isFirst = i === 0;
+        var iconBg = isFirst ? 'bg-primary text-on-primary shadow-lg shadow-primary/20' : 'bg-surface-container-highest text-primary';
+        var iconName = 'water_drop';
+        if (isFirst) {
+          iconName = 'content_cut';
+        } else if (i === 1) {
+          iconName = 'sanitizer';
+        }
+
+        var tags = '';
+        if (isFirst) {
+          tags = '<div class="flex gap-2"><span class="bg-surface-container-high px-3 py-1 rounded-md text-[0.6875rem] font-bold text-on-surface-variant uppercase">TIMING: ASAP</span></div>';
+        } else if (i === 1) {
+          tags = '<div class="flex gap-2"><span class="bg-secondary-container px-3 py-1 rounded-md text-[0.6875rem] font-bold text-on-secondary-container tracking-wide">ORGANIC OPTION</span></div>';
+        }
+
+        return '<div class="relative pl-12">' +
+          '<div class="absolute left-0 top-0 w-10 h-10 rounded-full flex items-center justify-center z-10 ' + iconBg + '">' +
+          _ic(iconName, '') + '</div>' +
+          '<h4 class="text-lg font-bold text-on-surface mb-2">Step ' + esc(c.step) + ': ' + esc(c.title) + '</h4>' +
+          '<p class="text-on-surface-variant text-sm leading-relaxed mb-3">' + esc(c.description) + '</p>' +
+          tags + '</div>';
+      }).join('');
+
+      return cureH || '<p class="pl-12 text-on-surface-variant text-sm leading-relaxed">Your plant matches our healthy profile. Continue standard maintenance and irrigation protocols.</p>';
+    }
+
+    function buildPrecautionsHtml(precautions) {
+      var precH = (precautions || []).map(function (p) {
+        return '<label class="flex items-start gap-4 p-4 bg-surface-container-lowest rounded-xl cursor-pointer hover:translate-x-1 transition-all">' +
+          '<input class="mt-1 w-5 h-5 rounded-md border-outline text-primary focus:ring-primary/20" type="checkbox"/>' +
+          '<div><span class="font-semibold block text-on-surface">' + esc(p) + '</span>' +
+          '<span class="text-xs text-on-surface-variant">Recommended precaution verified by CropDoc</span></div></label>';
+      }).join('');
+      return precH || '<div class="p-4 bg-surface-container-lowest rounded-xl"><span class="text-sm text-on-surface-variant">Excellent crop health detected. No immediate actions required.</span></div>';
+    }
+
+    function buildAgroHtml(agrochemicals) {
+      var chemoH = (agrochemicals || []).map(function (a) {
+        var isFertilizer = a.type === 'Fertilizer';
+        var aIcon = isFertilizer ? 'compost' : 'pest_control';
+        var aColor = isFertilizer ? 'text-primary bg-primary-container/20' : 'text-secondary bg-secondary-container/20 transition-colors';
+        return '<div class="flex items-start gap-4 p-4 bg-surface-container-low/50 rounded-xl border border-outline-variant/10">' +
+          '<div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 ' + aColor + '">' + _ic(aIcon, '') + '</div>' +
+          '<div>' +
+          '<span class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">' + esc(a.type) + '</span>' +
+          '<h4 class="font-bold text-on-surface text-base mb-1">' + esc(a.name) + '</h4>' +
+          '<p class="text-sm text-on-surface-variant">' + esc(a.detail) + '</p>' +
+          '</div>' +
+          '</div>';
+      }).join('');
+      return chemoH || '<div class="p-4 bg-surface-container-low rounded-xl text-sm text-on-surface-variant">Maintenance status optimal. No specific agrochemicals needed.</div>';
+    }
+
     function populateDiagnosis(result, imgSrc) {
-      window.currentDiagnosisResult = result;
+      globalThis.currentDiagnosisResult = result;
       var main = document.querySelector('#page-diagnosis main');
       if (!main) return;
 
@@ -1902,62 +1960,10 @@
       };
       var r = RC[result.riskLevel] || RC['Moderate Risk'];
 
-      // Generate Cure Timeline
-      var cureH = (result.curePlan || []).map(function (c, i) {
-        var isFirst = i === 0;
-        var iconBg = isFirst ? 'bg-primary text-on-primary shadow-lg shadow-primary/20' : 'bg-surface-container-highest text-primary';
-        var iconName = isFirst ? 'content_cut' : (i === 1 ? 'sanitizer' : 'water_drop'); 
-
-        var tags = '';
-        if (isFirst) {
-          tags = '<div class="flex gap-2"><span class="bg-surface-container-high px-3 py-1 rounded-md text-[0.6875rem] font-bold text-on-surface-variant uppercase">TIMING: ASAP</span></div>';
-        } else if (i === 1) {
-          tags = '<div class="flex gap-2"><span class="bg-secondary-container px-3 py-1 rounded-md text-[0.6875rem] font-bold text-on-secondary-container tracking-wide">ORGANIC OPTION</span></div>';
-        }
-
-        return '<div class="relative pl-12">' +
-          '<div class="absolute left-0 top-0 w-10 h-10 rounded-full flex items-center justify-center z-10 ' + iconBg + '">' +
-          _ic(iconName, '') + '</div>' +
-          '<h4 class="text-lg font-bold text-on-surface mb-2">Step ' + esc(c.step) + ': ' + esc(c.title) + '</h4>' +
-          '<p class="text-on-surface-variant text-sm leading-relaxed mb-3">' + esc(c.description) + '</p>' +
-          tags + '</div>';
-      }).join('');
-
-      if (!cureH) {
-        cureH = '<p class="pl-12 text-on-surface-variant text-sm leading-relaxed">Your plant matches our healthy profile. Continue standard maintenance and irrigation protocols.</p>';
-      }
-
-      // Generate Precautions Checkboxes
-      var precH = (result.precautions || []).map(function (p) {
-        return '<label class="flex items-start gap-4 p-4 bg-surface-container-lowest rounded-xl cursor-pointer hover:translate-x-1 transition-all">' +
-          '<input class="mt-1 w-5 h-5 rounded-md border-outline text-primary focus:ring-primary/20" type="checkbox"/>' +
-          '<div><span class="font-semibold block text-on-surface">' + esc(p) + '</span>' +
-          '<span class="text-xs text-on-surface-variant">Recommended precaution verified by CropDoc</span></div></label>';
-      }).join('');
-
-      if (!precH) {
-        precH = '<div class="p-4 bg-surface-container-lowest rounded-xl"><span class="text-sm text-on-surface-variant">Excellent crop health detected. No immediate actions required.</span></div>';
-      }
-
+      var cureH = buildCureHtml(result.curePlan);
+      var precH = buildPrecautionsHtml(result.precautions);
+      var chemoH = buildAgroHtml(result.agrochemicals);
       var confVal = result.confidence || 0;
-
-      // Generate Agrochemicals (Fertilizers & Pesticides)
-      var chemoH = (result.agrochemicals || []).map(function (a) {
-        var aIcon = a.type === 'Fertilizer' ? 'compost' : 'pest_control';
-        var aColor = a.type === 'Fertilizer' ? 'text-primary bg-primary-container/20' : 'text-secondary bg-secondary-container/20 transition-colors';
-        return '<div class="flex items-start gap-4 p-4 bg-surface-container-low/50 rounded-xl border border-outline-variant/10">' +
-          '<div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 ' + aColor + '">' + _ic(aIcon, '') + '</div>' +
-          '<div>' +
-          '<span class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">' + esc(a.type) + '</span>' +
-          '<h4 class="font-bold text-on-surface text-base mb-1">' + esc(a.name) + '</h4>' +
-          '<p class="text-sm text-on-surface-variant">' + esc(a.detail) + '</p>' +
-          '</div>' +
-          '</div>';
-      }).join('');
-
-      if (!chemoH) {
-        chemoH = '<div class="p-4 bg-surface-container-low rounded-xl text-sm text-on-surface-variant">Maintenance status optimal. No specific agrochemicals needed.</div>';
-      }
 
       var layoutHtml =
         '<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">' +
@@ -2103,9 +2109,10 @@
         }
 
         let text = data.candidates[0].content.parts[0].text;
-        text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+        text = text.replaceAll('```json', '').replaceAll('```', '').trim();
         return JSON.parse(text);
       } catch (e) {
+        console.error('AI Error:', e);
         throw e;
       }
     }
@@ -2131,7 +2138,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: currentUser.email, scan: newScan })
           });
-        } catch (e) { console.error('History sync failed'); }
+        } catch (e) { console.error('History sync failed', e); }
       }
 
       renderHistory();
@@ -2155,7 +2162,7 @@
           const data = await resp.json();
           if (data.success) history = data.history;
         } catch (e) { 
-          console.warn('Reliability Note: Offline history access.'); 
+          console.warn('Reliability Note: Offline history access.', e); 
         }
       }
 
@@ -2178,11 +2185,11 @@
 
         const item = document.createElement('div');
         item.className = 'history-item group bg-surface-container-lowest rounded-xl p-5 flex items-center gap-6 hover:bg-white transition-all border border-outline-variant/15 cursor-pointer';
-        item.setAttribute('data-tags', esc(`${scan.plantName} ${scan.diseaseName} ${scan.riskLevel}`).toLowerCase());
+        item.dataset.tags = esc(`${scan.plantName} ${scan.diseaseName} ${scan.riskLevel}`).toLowerCase();
         item.onclick = () => {
-          let fullData = JSON.parse(JSON.stringify(scan));
-          const match = typeof DISEASE_DB !== 'undefined' ? DISEASE_DB.find(d => d.data.diseaseName === scan.diseaseName) : null;
-          if (match) fullData = Object.assign({}, match.data, scan); 
+          let fullData = structuredClone(scan);
+          const match = DISEASE_DB !== undefined ? DISEASE_DB.find(d => d.data.diseaseName === scan.diseaseName) : undefined;
+          if (match) fullData = { ...match.data, ...scan }; 
           fullData.isPlant = true;
           populateDiagnosis(fullData, scan.image);
           navigate('diagnosis');
@@ -2217,8 +2224,8 @@
     }
 
     function downloadCurrentReport() {
-      if (!window.currentDiagnosisResult) return;
-      var r = window.currentDiagnosisResult;
+      if (!globalThis.currentDiagnosisResult) return;
+      var r = globalThis.currentDiagnosisResult;
 
       var text = "=========================================\n";
       text += "      CROPDOC AI - DIAGNOSIS REPORT      \n";
@@ -2256,10 +2263,10 @@
       var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
       a.href = url;
-      a.download = "CropDoc_Report_" + r.diseaseName.replace(/\s+/g, "_") + ".txt";
+      a.download = "CropDoc_Report_" + r.diseaseName.replaceAll(/\s+/g, "_") + ".txt";
       document.body.appendChild(a);
       a.click();
-      document.body.removeChild(a);
+      a.remove();
       URL.revokeObjectURL(url);
     }
   </script>

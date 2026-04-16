@@ -3,8 +3,8 @@ const multer = require('multer');
 const sharp = require('sharp');
 const cors = require('cors');
 const helmet = require('helmet');
-const path = require('path');
-const fs = require('fs').promises;
+const path = require('node:path');
+const fs = require('node:fs').promises;
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -20,7 +20,7 @@ async function initDB() {
         users: [
           {
             email: 'demo@cropdoc.ai',
-            password: 'password123',
+            password: process.env.DEMO_PASSWORD || 'password123',
             name: 'Rajesh Kumar',
             location: 'Punjab, India',
             memberSince: '2022'
@@ -84,7 +84,7 @@ app.post('/api/signup', async (req, res) => {
     }
 
     const db = await getDB();
-    if (db.users.find(u => u.email === email)) {
+    if (db.users.some(u => u.email === email)) {
       return res.status(400).json({ success: false, error: 'Email Identity Collision: User exists' });
     }
 
@@ -100,6 +100,7 @@ app.post('/api/signup', async (req, res) => {
 
     res.json({ success: true, user: { email: newUser.email, name: newUser.name } });
   } catch (err) {
+    console.error('Signup error:', err);
     res.status(500).json({ success: false, error: 'Reliability Fault: Internal Signup Error' });
   }
 });
@@ -124,6 +125,7 @@ app.post('/api/login', async (req, res) => {
       } 
     });
   } catch (err) {
+    console.error('Login error:', err);
     res.status(500).json({ success: false, error: 'Reliability Fault: Internal Login Error' });
   }
 });
@@ -136,6 +138,7 @@ app.get('/api/history', async (req, res) => {
     const userHistory = db.history.filter(h => h.userEmail === email);
     res.json({ success: true, history: userHistory });
   } catch (err) {
+    console.error('History fetch error:', err);
     res.status(500).json({ success: false, error: 'Data Access Error' });
   }
 });
@@ -151,6 +154,7 @@ app.post('/api/history', async (req, res) => {
     await saveDB(db);
     res.json({ success: true });
   } catch (err) {
+    console.error('History save error:', err);
     res.status(500).json({ success: false, error: 'Data Persistence Error' });
   }
 });
@@ -188,7 +192,12 @@ async function simulatePrediction(imageBuffer) {
     const channels = stats.channels;
     const redness = channels[0].mean / Math.max(channels[1].mean + channels[2].mean, 1);
     
-    let type = (redness > 1.2) ? 'late_blight' : (channels[1].mean > 120 ? 'healthy' : 'early_blight');
+    let type = 'healthy';
+    if (redness > 1.2) {
+      type = 'late_blight';
+    } else if (channels[1].mean <= 120) {
+      type = 'early_blight';
+    }
     const base = SIMULATED_DISEASES[type] || SIMULATED_DISEASES['healthy'];
 
     return { ...base, confidence: 90, timestamp: new Date().toISOString() };
