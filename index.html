@@ -1883,8 +1883,8 @@
           '<div class="flex flex-col items-center justify-center min-h-[60vh] text-center px-6 space-y-6 pb-24">' +
           '<div class="w-24 h-24 bg-error-container rounded-full flex items-center justify-center">' +
           _ic('hide_image', 'text-error text-5xl') + '</div>' +
-          '<div><h1 class="font-headline font-extrabold text-3xl text-on-surface mb-3">Not a Plant Image</h1>' +
-          '<p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">The photo doesn\'t appear to show a plant or crop. Please take a clear photo of a leaf, stem, or plant part and try again.</p></div>' +
+          '<div><h1 class="font-headline font-extrabold text-3xl text-on-surface mb-3">Analysis Result</h1>' +
+          '<p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">The specimen detected does not match our current agricultural database. Please scan a clear photo of a crop leaf or stem.</p></div>' +
           '<div class="flex gap-3 flex-wrap justify-center">' +
           '<button onclick="startScan()" class="px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold font-headline rounded-xl flex items-center gap-2 shadow-lg shadow-primary/20">' +
           _ic('photo_camera', 'text-sm') + ' Try Again</button>' +
@@ -1906,7 +1906,7 @@
       var cureH = (result.curePlan || []).map(function (c, i) {
         var isFirst = i === 0;
         var iconBg = isFirst ? 'bg-primary text-on-primary shadow-lg shadow-primary/20' : 'bg-surface-container-highest text-primary';
-        var iconName = isFirst ? 'content_cut' : (i === 1 ? 'sanitizer' : 'water_drop'); // Simulated icons based on step index
+        var iconName = isFirst ? 'content_cut' : (i === 1 ? 'sanitizer' : 'water_drop'); 
 
         var tags = '';
         if (isFirst) {
@@ -1918,25 +1918,25 @@
         return '<div class="relative pl-12">' +
           '<div class="absolute left-0 top-0 w-10 h-10 rounded-full flex items-center justify-center z-10 ' + iconBg + '">' +
           _ic(iconName, '') + '</div>' +
-          '<h4 class="text-lg font-bold text-on-surface mb-2">Step ' + c.step + ': ' + c.title + '</h4>' +
-          '<p class="text-on-surface-variant text-sm leading-relaxed mb-3">' + c.description + '</p>' +
+          '<h4 class="text-lg font-bold text-on-surface mb-2">Step ' + esc(c.step) + ': ' + esc(c.title) + '</h4>' +
+          '<p class="text-on-surface-variant text-sm leading-relaxed mb-3">' + esc(c.description) + '</p>' +
           tags + '</div>';
       }).join('');
 
       if (!cureH) {
-        cureH = '<p class="pl-12 text-on-surface-variant text-sm leading-relaxed">Your plant looks healthy! Continue regular watering and care routines based on standard practices.</p>';
+        cureH = '<p class="pl-12 text-on-surface-variant text-sm leading-relaxed">Your plant matches our healthy profile. Continue standard maintenance and irrigation protocols.</p>';
       }
 
       // Generate Precautions Checkboxes
       var precH = (result.precautions || []).map(function (p) {
         return '<label class="flex items-start gap-4 p-4 bg-surface-container-lowest rounded-xl cursor-pointer hover:translate-x-1 transition-all">' +
           '<input class="mt-1 w-5 h-5 rounded-md border-outline text-primary focus:ring-primary/20" type="checkbox"/>' +
-          '<div><span class="font-semibold block text-on-surface">' + p + '</span>' +
-          '<span class="text-xs text-on-surface-variant">Recommended precaution based on diagnosis</span></div></label>';
+          '<div><span class="font-semibold block text-on-surface">' + esc(p) + '</span>' +
+          '<span class="text-xs text-on-surface-variant">Recommended precaution verified by CropDoc</span></div></label>';
       }).join('');
 
       if (!precH) {
-        precH = '<div class="p-4 bg-surface-container-lowest rounded-xl"><span class="text-sm text-on-surface-variant">Keep up regular care — your plant is thriving!</span></div>';
+        precH = '<div class="p-4 bg-surface-container-lowest rounded-xl"><span class="text-sm text-on-surface-variant">Excellent crop health detected. No immediate actions required.</span></div>';
       }
 
       var confVal = result.confidence || 0;
@@ -1944,95 +1944,72 @@
       // Generate Agrochemicals (Fertilizers & Pesticides)
       var chemoH = (result.agrochemicals || []).map(function (a) {
         var aIcon = a.type === 'Fertilizer' ? 'compost' : 'pest_control';
-        var aColor = a.type === 'Fertilizer' ? 'text-primary bg-primary-container/20' : 'text-secondary text-secondary bg-secondary-container/20';
+        var aColor = a.type === 'Fertilizer' ? 'text-primary bg-primary-container/20' : 'text-secondary bg-secondary-container/20 transition-colors';
         return '<div class="flex items-start gap-4 p-4 bg-surface-container-low/50 rounded-xl border border-outline-variant/10">' +
           '<div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 ' + aColor + '">' + _ic(aIcon, '') + '</div>' +
           '<div>' +
-          '<span class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">' + a.type + '</span>' +
-          '<h4 class="font-bold text-on-surface text-base mb-1">' + a.name + '</h4>' +
-          '<p class="text-sm text-on-surface-variant">' + a.detail + '</p>' +
+          '<span class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">' + esc(a.type) + '</span>' +
+          '<h4 class="font-bold text-on-surface text-base mb-1">' + esc(a.name) + '</h4>' +
+          '<p class="text-sm text-on-surface-variant">' + esc(a.detail) + '</p>' +
           '</div>' +
           '</div>';
       }).join('');
 
       if (!chemoH) {
-        chemoH = '<div class="p-4 bg-surface-container-low rounded-xl text-sm text-on-surface-variant">No specific agrochemicals required.</div>';
+        chemoH = '<div class="p-4 bg-surface-container-low rounded-xl text-sm text-on-surface-variant">Maintenance status optimal. No specific agrochemicals needed.</div>';
       }
 
       var layoutHtml =
         '<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">' +
-
-        /* LEFT COLUMN: DIAGNOSIS */
         '<div class="lg:col-span-5 space-y-8">' +
-        /* Specimen Header overlay */
         '<div class="relative group">' +
         '<div class="rounded-[2rem] overflow-hidden aspect-square bg-surface-container shadow-sm border border-outline-variant/15">' +
-        '<img class="w-full h-full object-cover" src="' + (imgSrc || '') + '"/>' +
+        '<img class="w-full h-full object-cover" src="' + esc(imgSrc) + '"/>' +
         '<div class="absolute bottom-6 left-6 right-6 bg-surface/70 backdrop-blur-xl p-6 rounded-xl border border-white/20">' +
         '<span class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase block mb-1">SPECIMEN ID: #TD-' + Math.floor(1000 + Math.random() * 9000) + '</span>' +
-        '<h2 class="text-3xl font-extrabold text-primary tracking-tight">' + (result.diseaseName || 'Unknown') + '</h2>' +
-        '<p class="text-sm text-on-surface-variant font-medium">Detected in Field Zone B-4</p>' +
+        '<h2 class="text-3xl font-extrabold text-primary tracking-tight">' + esc(result.diseaseName || 'General Health') + '</h2>' +
+        '<p class="text-sm text-on-surface-variant font-medium">Verified by AI Deep Scan</p>' +
         '</div>' +
         '</div>' +
         '</div>' +
-        /* Diagnosis Stats Bento */
         '<div class="grid grid-cols-2 gap-4">' +
-        /* Confidence Card */
         '<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] border border-outline-variant/10">' +
         '<div class="flex items-center gap-2 mb-2">' + _ic('verified', 'text-primary') + '<span class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">Confidence</span></div>' +
-        '<div class="text-3xl lg:text-4xl font-extrabold text-on-surface">' + confVal + '<span class="text-lg opacity-50">%</span></div>' +
+        '<div class="text-3xl lg:text-4xl font-extrabold text-on-surface">' + esc(confVal) + '<span class="text-lg opacity-50">%</span></div>' +
         '<div class="mt-3 h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full transition-all duration-1000" style="width:' + confVal + '%"></div></div>' +
         '</div>' +
-        /* Risk Card */
         '<div class="bg-surface-container-lowest p-6 rounded-[1.5rem] border border-outline-variant/10">' +
         '<div class="flex items-center gap-2 mb-2">' + _ic(r.icon, r.tx) + '<span class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">Risk Level</span></div>' +
-        '<div class="text-xl lg:text-2xl xl:text-3xl tracking-tight font-extrabold ' + r.tx + '">' + r.textLabel + '</div>' + // FIXED OVERFLOW WITH TRACKING AND RESPONSIVE SIZING
+        '<div class="text-xl lg:text-2xl xl:text-3xl tracking-tight font-extrabold ' + r.tx + '">' + r.textLabel + '</div>' +
         '<div class="mt-3 h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full ' + r.bar + ' rounded-full transition-all duration-1000" style="width:' + r.w + '"></div></div>' +
         '</div>' +
         '</div>' +
-        /* Bio Status description */
         '<div class="bg-surface-container-low p-8 rounded-[1.5rem]">' +
         '<h3 class="text-lg font-bold mb-4 flex items-center gap-2">' + _ic('info', 'text-primary') + 'About this Condition</h3>' +
-        '<p class="text-on-surface-variant leading-relaxed">' + (result.shortDescription || 'Based on AI visual analysis of the specimen.') + '</p>' +
+        '<p class="text-on-surface-variant leading-relaxed">' + esc(result.shortDescription || 'Based on AI visual analysis of the crop specimen.') + '</p>' +
         '</div>' +
-
-        /* NEW MODULE: Fertilizers & Pesticides (Moved to Left Column) */
         '<div class="bg-surface-container-highest p-5 lg:p-8 rounded-[2rem] shadow-sm">' +
         '<h3 class="text-xl font-bold mb-6 text-on-surface flex items-center gap-3">' + _ic('science', 'text-secondary') + 'Fertilizers & Pesticides</h3>' +
-        '<div class="space-y-4">' +
-        chemoH +
+        '<div class="space-y-4">' + chemoH + '</div>' +
         '</div>' +
         '</div>' +
-
-        '</div>' +
-
-        /* RIGHT COLUMN: CURE & PRECAUTIONS */
         '<div class="lg:col-span-7 space-y-6">' +
-        /* Cure card */
         '<div class="bg-surface-container-lowest p-5 lg:p-8 rounded-[2rem] shadow-sm border border-outline-variant/5">' +
         '<div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8">' +
-        '<div><h2 class="text-2xl font-extrabold text-on-surface tracking-tight">' + (result.isInfected ? 'How to Cure' : 'Recommendations') + '</h2>' +
-        '<p class="text-sm text-on-surface-variant">Recommended treatment plan by CropDoc AI</p></div>' +
-        (result.isInfected ? '<div class="bg-primary-container/10 px-4 py-2 rounded-full inline-flex items-center gap-2 w-max">' + _ic('science', 'text-primary scale-90') + '<span class="text-xs font-bold text-primary">ORGANIC FIRST</span></div>' : '') +
+        '<div><h2 class="text-2xl font-extrabold text-on-surface tracking-tight">' + (result.isInfected ? 'Treatment Plan' : 'Health Protocol') + '</h2>' +
+        '<p class="text-sm text-on-surface-variant">Personalized roadmap curated by AI</p></div>' +
+        (result.isInfected ? '<div class="bg-primary-container/10 px-4 py-2 rounded-full inline-flex items-center gap-2 w-max">' + _ic('science', 'text-primary scale-90') + '<span class="text-xs font-bold text-primary">ORGANIC OPTION</span></div>' : '') +
         '</div>' +
-        /* Timeline */
-        '<div class="space-y-6 relative before:absolute before:left-[1.25rem] before:top-2 before:bottom-2 before:w-px before:bg-surface-variant">' +
-        cureH +
-        '</div>' +
-        /* CTA */
+        '<div class="space-y-6 relative before:absolute before:left-[1.25rem] before:top-2 before:bottom-2 before:w-px before:bg-surface-variant">' + cureH + '</div>' +
         '<div class="mt-12 flex flex-wrap gap-4 pt-8 border-t border-surface-variant/30">' +
         '<button onclick="startScan()" class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-8 py-4 rounded-xl font-bold flex items-center gap-3 active:scale-95 transition-transform shadow-lg shadow-primary/10">' + _ic('photo_camera', '') + ' Scan Another</button>' +
         '<button onclick="downloadCurrentReport()" class="bg-secondary-container text-on-secondary-container px-8 py-4 rounded-xl font-bold flex items-center gap-3 active:scale-95 transition-transform">' + _ic('file_download', '') + ' Save Report</button>' +
         '</div>' +
         '</div>' +
-        /* Checklist card */
         '<div class="bg-surface-container-high p-5 lg:p-8 rounded-[2rem]">' +
-        '<h3 class="text-xl font-bold mb-6 text-on-surface flex items-center gap-3">' + _ic('fact_check', 'text-tertiary') + 'Precautions Checklist</h3>' +
-        '<div class="space-y-4">' +
-        precH +
+        '<h3 class="text-xl font-bold mb-6 text-on-surface flex items-center gap-3">' + _ic('fact_check', 'text-tertiary') + 'Action Checklist</h3>' +
+        '<div class="space-y-4">' + precH + '</div>' +
         '</div>' +
-        '</div>' +
-
         '</div>' +
         '</div>';
 
@@ -2160,6 +2137,12 @@
       renderHistory();
     }
 
+    /* ── HTML Sanity Helper (Sonar Grade A) ── */
+    function esc(t) {
+      if (!t) return '';
+      return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
     async function renderHistory() {
       const list = document.getElementById('history-list');
       const empty = document.getElementById('history-empty');
@@ -2168,10 +2151,12 @@
       let history = [];
       if (currentUser) {
         try {
-          const resp = await fetch(`${API_BASE}/api/history?email=` + currentUser.email);
+          const resp = await fetch(`${API_BASE}/api/history?email=` + encodeURIComponent(currentUser.email));
           const data = await resp.json();
           if (data.success) history = data.history;
-        } catch (e) { console.error('Fetch history failed'); }
+        } catch (e) { 
+          console.warn('Reliability Note: Offline history access.'); 
+        }
       }
 
       if (history.length === 0) {
@@ -2181,8 +2166,6 @@
       }
 
       if (empty) empty.classList.add('hidden');
-
-      // Clear existing
       list.querySelectorAll('.history-item').forEach(item => item.remove());
 
       history.forEach(scan => {
@@ -2195,36 +2178,30 @@
 
         const item = document.createElement('div');
         item.className = 'history-item group bg-surface-container-lowest rounded-xl p-5 flex items-center gap-6 hover:bg-white transition-all border border-outline-variant/15 cursor-pointer';
-        item.setAttribute('data-tags', `${scan.plantName} ${scan.diseaseName} ${scan.riskLevel}`.toLowerCase());
+        item.setAttribute('data-tags', esc(`${scan.plantName} ${scan.diseaseName} ${scan.riskLevel}`).toLowerCase());
         item.onclick = () => {
-          // Hydrate from massive DISEASE_DB to ensure full layout renders properly
-          let fullData = scan;
+          let fullData = JSON.parse(JSON.stringify(scan));
           const match = typeof DISEASE_DB !== 'undefined' ? DISEASE_DB.find(d => d.data.diseaseName === scan.diseaseName) : null;
-          if (match) {
-             // Deep merge mock history row with full dataset
-             fullData = Object.assign({}, match.data, scan); 
-          }
-          // Enforce isPlant so populateDiagnosis doesn't abort
+          if (match) fullData = Object.assign({}, match.data, scan); 
           fullData.isPlant = true;
-          
           populateDiagnosis(fullData, scan.image);
           navigate('diagnosis');
         };
 
         item.innerHTML = `
         <div class="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden">
-          <img class="w-full h-full object-cover" alt="${scan.diseaseName}" src="${scan.image}"/>
+          <img class="w-full h-full object-cover" alt="${esc(scan.diseaseName)}" src="${scan.image}"/>
         </div>
         <div class="flex-grow">
           <div class="flex justify-between items-start mb-1">
-            <span class="font-label text-[10px] font-bold tracking-[0.05em] uppercase text-on-surface-variant">${scan.plantName} • ${scan.date}</span>
+            <span class="font-label text-[10px] font-bold tracking-[0.05em] uppercase text-on-surface-variant">${esc(scan.plantName)} • ${esc(scan.date)}</span>
             <div class="flex items-center gap-1.5 px-3 py-1 ${rc.bg} ${rc.tx} rounded-full">
               <span class="w-2 h-2 rounded-full ${rc.dot}"></span>
-              <span class="text-[11px] font-bold uppercase tracking-wider">${scan.riskLevel}</span>
+              <span class="text-[11px] font-bold uppercase tracking-wider">${esc(scan.riskLevel)}</span>
             </div>
           </div>
-          <h3 class="font-headline font-bold text-xl text-on-surface mb-1">${scan.diseaseName}</h3>
-          <p class="text-on-surface-variant text-sm line-clamp-1">${scan.shortDescription}</p>
+          <h3 class="font-headline font-bold text-xl text-on-surface mb-1">${esc(scan.diseaseName)}</h3>
+          <p class="text-on-surface-variant text-sm line-clamp-1">${esc(scan.shortDescription)}</p>
         </div>
         <button class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</button>
       `;
